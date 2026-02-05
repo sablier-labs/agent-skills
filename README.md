@@ -1,6 +1,25 @@
-# agent-skills
+# Sablier Agents Skills
 
-A collection of agent skills for AI coding assistants, compatible with the Vercel skills CLI.
+A collection of agent skills for AI coding assistants developed by Sablier Labs.
+
+## Installation
+
+```bash
+# Add all skills from this repository
+npx skills add sablier-labs/agent-skills
+
+# Add a specific skill (e.g., effect-ts)
+npx skills add sablier-labs/agent-skills -s effect-ts
+
+# Add globally for all projects
+npx skills add sablier-labs/agent-skills -s effect-ts -g
+
+# Target a specific agent (claude-code, cursor, cline, codex, etc.)
+npx skills add sablier-labs/agent-skills -s effect-ts -a claude-code
+
+# List available skills before installing
+npx skills add sablier-labs/agent-skills -l
+```
 
 ## Skills
 
@@ -27,26 +46,12 @@ A collection of agent skills for AI coding assistants, compatible with the Verce
 
 | Skill                    | Description                                                                    |
 | ------------------------ | ------------------------------------------------------------------------------ |
-| `btt`                    | Bulloak tree specifications for smart contract integration tests               |
 | `etherscan-api`          | Etherscan API V2 for blockchain queries                                        |
 | `etherscan-verification` | Etherscan contract verification                                                |
 | `evm-deployment`         | EVM smart contract deployment patterns                                         |
-| `foundry`                | Foundry tests, fuzz tests, fork tests, invariant tests, and deployment scripts |
-| `viem`                   | Viem TypeScript interface for Ethereum interactions                            |
-
-## Installation
-
-```bash
-# Add all skills from this repository
-npx skills add sablier-labs/agent-skills
-
-# List available skills
-npx skills list
-
-# Find specific skills
-npx skills find sablier
-npx skills find testing
-```
+| `web3-btt`               | Bulloak tree specifications for smart contract integration tests               |
+| `web3-foundry`           | Foundry tests, fuzz tests, fork tests, invariant tests, and deployment scripts |
+| `web3-viem`              | Viem TypeScript interface for Ethereum interactions                            |
 
 ## Usage
 
