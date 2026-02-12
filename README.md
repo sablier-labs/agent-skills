@@ -29,6 +29,7 @@ npx skills add sablier-labs/agent-skills -l
 | ------------------ | ------------------------------------------------------------------------------ |
 | `sablier-design`   | Sablier dark-theme aesthetic and production-grade React interfaces             |
 | `sablier-protocol` | Sablier protocol overview: token vesting, airdrops, and onchain payroll        |
+| `sablier-icon`     | Recolor the Sablier icon SVG to any brand or hex color, with PNG/JPG export    |
 | `sablier-writing`  | Content creation with Sablier brand voice: blog posts, case studies, X/Twitter |
 
 ### Development
