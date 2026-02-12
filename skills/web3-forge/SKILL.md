@@ -1,5 +1,5 @@
 ---
-name: web3-foundry
+name: web3-forge
 description: Write Foundry-based tests and scripts. Trigger phrases - foundry testing, write test, fuzz test, fork test, invariant test, deploy script, gas benchmark, coverage, or when working in tests/ or scripts/ directories.
 ---
 

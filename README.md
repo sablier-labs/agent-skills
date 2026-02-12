@@ -51,7 +51,7 @@ npx skills add sablier-labs/agent-skills -l
 | `etherscan-verification` | Etherscan contract verification                                                |
 | `evm-deployment`         | EVM smart contract deployment patterns                                         |
 | `web3-btt`               | Bulloak tree specifications for smart contract integration tests               |
-| `web3-foundry`           | Foundry tests, fuzz tests, fork tests, invariant tests, and deployment scripts |
+| `web3-forge`             | Foundry tests, fuzz tests, fork tests, invariant tests, and deployment scripts |
 | `web3-viem`              | Viem TypeScript interface for Ethereum interactions                            |
 
 ## Usage
