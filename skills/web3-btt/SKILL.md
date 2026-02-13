@@ -47,6 +47,21 @@ where:
 bulloak check --skip-modifiers <path/to/file.tree>
 ```
 
+### Important: Tree Files Should NOT Have Periods
+
+Tree files should **not** have periods at the end of `it` branches. The `--format-descriptions` flag automatically:
+
+1. Capitalizes the first letter
+2. Adds a period at the end
+
+```
+# Correct (no period)
+└── it should revert
+
+# Wrong (has period)
+└── it should revert.
+```
+
 ## Tree Syntax
 
 ### Structure
@@ -123,13 +138,13 @@ Start with guard conditions that cause early reverts:
 
 ```
 ├── when delegate call          // First: delegation check
-│  └── it should revert.
+│  └── it should revert
 └── when no delegate call
    ├── given null               // Second: existence check
-   │  └── it should revert.
+   │  └── it should revert
    └── given not null
       ├── when amount zero      // Third: input validation
-      │  └── it should revert.
+      │  └── it should revert
       └── when amount not zero
          └── ...                // Finally: business logic
 ```
@@ -164,12 +179,12 @@ Whenever possible, try to use less words and more concise language for the branc
 For success cases, enumerate all side effects:
 
 ```
-└── it should make the withdrawal.
-   ├── it should reduce the entry balance by the withdrawn amount.
-   ├── it should reduce the aggregate amount by the withdrawn amount.
-   ├── it should update the entry state.
-   ├── it should update the timestamp.
-   └── it should emit {Transfer}, {Withdraw} and {MetadataUpdate} events.
+└── it should make the withdrawal
+   ├── it should reduce the entry balance by the withdrawn amount
+   ├── it should reduce the aggregate amount by the withdrawn amount
+   ├── it should update the entry state
+   ├── it should update the timestamp
+   └── it should emit {Transfer}, {Withdraw} and {MetadataUpdate} events
 ```
 
 Put events in parenthesis: {EventName}.

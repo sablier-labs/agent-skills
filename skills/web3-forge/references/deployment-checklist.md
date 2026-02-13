@@ -7,8 +7,8 @@ Pre-mainnet deployment checklist for Sablier contracts.
 ### Code Readiness
 
 - [ ] All tests passing (`just test-all`)
-- [ ] Coverage meets threshold (`just coverage <package>`)
-- [ ] BTT trees aligned (`just test-bulloak <package>`)
+- [ ] Coverage meets threshold (`just <package>::coverage`)
+- [ ] BTT trees aligned (`just <package>::test-bulloak`)
 - [ ] Gas snapshot baseline captured (`forge snapshot`)
 - [ ] Contract sizes under 24kb (`forge build --sizes`)
 - [ ] Static analysis clean (`slither src/ --exclude-dependencies`)
@@ -224,7 +224,7 @@ ______________________________________________________________________
 
 ```bash
 # Full deployment workflow
-just build-optimized <package>     # Build with optimization
+just <package>::build-optimized     # Build with optimization
 forge snapshot                     # Capture gas baseline
 forge script ... --broadcast      # Deploy
 forge verify-contract ...         # Manual verification if needed
