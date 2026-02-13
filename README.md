@@ -47,6 +47,7 @@ npx skills add sablier-labs/agent-skills -l
 
 | Skill                    | Description                                                                    |
 | ------------------------ | ------------------------------------------------------------------------------ |
+| `coingecko-api`          | CoinGecko API for token metadata, logos, and price queries                     |
 | `etherscan-api`          | Etherscan API V2 for blockchain queries                                        |
 | `etherscan-verification` | Etherscan contract verification                                                |
 | `evm-deployment`         | EVM smart contract deployment patterns                                         |
