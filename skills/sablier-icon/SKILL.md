@@ -8,7 +8,7 @@ Recolor the Sablier icon SVG to a user-specified color and optionally export to 
 
 ## Source
 
-The base icon is at `assets/white-icon.svg` (relative to this skill directory). It is a single-path SVG with
+The base icon is at `assets/icon-white.svg` (relative to this skill directory). It is a single-path SVG with
 `fill="white"` and `viewBox="0 0 386 480"` (aspect ratio ~0.804:1). To recolor, replace the `fill` attribute value
 with the target hex color. Always preserve the original viewBox and aspect ratio — never add or change `width`/`height`
 attributes on the SVG.
@@ -52,7 +52,7 @@ When the user says "primary", use `#ff9c00`. When they say "secondary", use `#00
 
 ## SVG Generation
 
-1. Read `assets/white-icon.svg`
+1. Read `assets/icon-white.svg`
 2. Replace `fill="white"` on the `<path>` element only — never touch `fill="none"` on the root `<svg>` element
 3. Verify exactly one replacement occurred. Zero means the SVG structure changed; more than one means multi-path — both
    require investigation before proceeding
