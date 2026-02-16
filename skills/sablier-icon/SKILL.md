@@ -124,27 +124,32 @@ Use the brand alias when matched by name (e.g. `primary`), otherwise strip the `
 If the user passes `--format png` or `--format jpg`:
 
 1. Generate the recolored SVG first
-2. Verify `magick` is available: `command -v magick >/dev/null 2>&1 || { echo "Error: ImageMagick not found. Install with: brew install imagemagick"; exit 1; }`
-3. Use `magick` to convert:
+2. Verify `rsvg-convert` is available: `command -v rsvg-convert >/dev/null 2>&1 || { echo "Error: rsvg-convert not found. Install with: brew install librsvg"; exit 1; }`
+3. Use `rsvg-convert` for SVG→PNG (it correctly renders CSS gradients, unlike ImageMagick's SVG renderer which produces grayscale)
+4. For JPG, convert the PNG with `magick` (verify availability: `command -v magick >/dev/null 2>&1`)
 
 **Gradient mode** (from `icon.svg`, viewBox 189.9×236.73):
 
 ```bash
-# PNG (transparent background, 1024px height, auto-compute width from aspect ratio ≈822px)
-magick -background none "<input>.svg" -resize x1024 "<output>.png"
+# PNG (transparent background, 1024px height, width auto-computed from aspect ratio ≈822px)
+rsvg-convert -h 1024 "<input>.svg" -o "<output>.png"
 
-# JPG (dark background since JPG has no transparency)
-magick -background "#14161f" "<input>.svg" -resize x1024 -flatten "<output>.jpg"
+# JPG (dark background since JPG has no transparency) — render PNG first, then convert
+rsvg-convert -h 1024 "<input>.svg" -o "<output>.tmp.png"
+magick "<output>.tmp.png" -background "#14161f" -flatten "<output>.jpg"
+rm "<output>.tmp.png"
 ```
 
 **Flat mode** (from `icon-white.svg`, viewBox 386×480):
 
 ```bash
-# PNG (transparent background, explicit dimensions from 386:480 ratio)
-magick -background none "<input>.svg" -resize 824x1024 "<output>.png"
+# PNG (transparent background, explicit height, width auto-computed ≈824px)
+rsvg-convert -h 1024 "<input>.svg" -o "<output>.png"
 
 # JPG (dark background)
-magick -background "#14161f" "<input>.svg" -resize 824x1024 -flatten "<output>.jpg"
+rsvg-convert -h 1024 "<input>.svg" -o "<output>.tmp.png"
+magick "<output>.tmp.png" -background "#14161f" -flatten "<output>.jpg"
+rm "<output>.tmp.png"
 ```
 
 Verify the exported file's dimensions match the expected aspect ratio.
