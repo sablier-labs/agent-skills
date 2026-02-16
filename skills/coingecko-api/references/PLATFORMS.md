@@ -5,7 +5,7 @@
 CoinGecko provides an endpoint to fetch all supported asset platforms:
 
 ```bash
-curl -s "https://api.coingecko.com/api/v3/asset_platforms?x_cg_demo_api_key=$COINGECKO_API_KEY"
+curl -s "$CG_BASE/asset_platforms" "${CG_AUTH[@]}"
 ```
 
 Use this endpoint to get the most up-to-date platform support information.
@@ -49,7 +49,7 @@ Use this endpoint to get the most up-to-date platform support information.
 | Near     | `near-protocol` | N/A      |
 | Sui      | `sui`           | N/A      |
 | Aptos    | `aptos`         | N/A      |
-| Sei      | `sei-network`   | `1329`   |
+| Sei      | `sei-v2`        | `1329`   |
 | Starknet | `starknet`      | N/A      |
 
 ## Notes
