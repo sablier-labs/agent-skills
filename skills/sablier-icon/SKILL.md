@@ -1,10 +1,10 @@
 ---
 name: sablier-icon
-argument-hint: <color> [--flat] [--format png|jpg]
-description: This skill should be used when the user asks to "recolor the Sablier icon", "Sablier icon in orange", "Sablier logo in primary color", "generate Sablier hourglass variant", "change Sablier icon color", or "export Sablier icon as PNG". Generates a gradient or flat Sablier icon SVG in any color using brand palette names, hex values, or CSS color names, with optional PNG/JPG raster export.
+argument-hint: <color> [--flat] [--format png|jpg|ico] [--favicon]
+description: This skill should be used when the user asks to "recolor the Sablier icon", "Sablier icon in orange", "Sablier logo in primary color", "generate Sablier hourglass variant", "change Sablier icon color", "export Sablier icon as PNG", or "generate Sablier favicon". Generates a gradient or flat Sablier icon SVG in any color using brand palette names, hex values, or CSS color names, with optional PNG/JPG/ICO raster export.
 ---
 
-Recolor the Sablier icon SVG to a user-specified color with an analogous gradient, and optionally export to PNG or JPG.
+Recolor the Sablier icon SVG to a user-specified color with an analogous gradient, and optionally export to PNG, JPG, or ICO (favicon).
 
 ## Source
 
@@ -154,7 +154,32 @@ rm "<output>.tmp.png"
 
 Verify the exported file's dimensions match the expected aspect ratio.
 
-The output filename follows the same `sablier-icon-<color-name>.<ext>` pattern.
+### ICO Export (`--format ico` or `--favicon`)
+
+`--favicon` is a shorthand for `--format ico`. Both produce a multi-resolution `.ico` file containing 16x16, 32x32, and 48x48 embedded PNGs — the standard sizes for `favicon.ico`.
+
+1. Generate the recolored SVG first
+2. Verify `rsvg-convert` and `magick` are available (same checks as PNG/JPG)
+3. Render intermediate PNGs at each favicon size using `rsvg-convert`
+4. Combine into a single `.ico` with `magick`
+5. Clean up intermediate PNGs
+
+```bash
+# Render PNGs at standard favicon sizes (square — use -w and -h to force square output)
+rsvg-convert -w 16 -h 16 "<input>.svg" -o "<output>-16.tmp.png"
+rsvg-convert -w 32 -h 32 "<input>.svg" -o "<output>-32.tmp.png"
+rsvg-convert -w 48 -h 48 "<input>.svg" -o "<output>-48.tmp.png"
+
+# Combine into multi-resolution ICO
+magick "<output>-16.tmp.png" "<output>-32.tmp.png" "<output>-48.tmp.png" "<output>.ico"
+
+# Clean up
+rm "<output>-16.tmp.png" "<output>-32.tmp.png" "<output>-48.tmp.png"
+```
+
+The output filename follows the `sablier-icon-<color-name>.ico` pattern — or `favicon.ico` if the user explicitly requests that name.
+
+The output filename follows the same `sablier-icon-<color-name>.<ext>` pattern for all other formats.
 
 ## Examples
 
@@ -165,3 +190,5 @@ The output filename follows the same `sablier-icon-<color-name>.<ext>` pattern.
 - `#00d395 --flat` → `sablier-icon-00d395.svg` with flat `fill="#00d395"`
 - `red --format jpg` → `sablier-icon-red.svg` + `sablier-icon-red.jpg`
 - `secondary --format png` → `sablier-icon-secondary.svg` + `sablier-icon-secondary.png` (blue gradient + raster export)
+- `primary --format ico` → `sablier-icon-primary.svg` + `sablier-icon-primary.ico` (multi-resolution 16/32/48px)
+- `primary --favicon` → same as `--format ico`
