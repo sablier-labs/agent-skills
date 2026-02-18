@@ -87,7 +87,7 @@ Do not default to Ethereum. Always infer the platform from the user's prompt bef
 
 ### Inference Rules
 
-1. **Explicit platform mention** — If the user mentions a chain name (e.g., "on Polygon", "Arbitrum token", "Base chain"), map it to the corresponding platform ID (see `./references/PLATFORMS.md`).
+1. **Explicit platform mention** — If the user mentions a chain name (e.g., "on Polygon", "Arbitrum token", "Base chain"), map it to the corresponding platform ID (see `./references/platforms.md`).
 2. **Platform-specific tokens** — Some tokens exist primarily on specific platforms:
    - SOL, BONK, JUP → Solana (`solana`)
    - POL → Polygon (`polygon-pos`)
@@ -108,7 +108,7 @@ For the current list of supported platforms, query:
 https://api.coingecko.com/api/v3/asset_platforms
 ```
 
-For a curated list of common platforms, see `./references/PLATFORMS.md`. For the full live index, query the endpoint above.
+For a curated list of common platforms, see `./references/platforms.md`. For the full live index, query the endpoint above.
 
 ## Core Workflows
 
@@ -134,7 +134,7 @@ Fetch price using a contract address on a specific chain:
 curl -s "$CG_BASE/simple/token_price/ethereum?contract_addresses=0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48&vs_currencies=usd&include_market_cap=true" "${CG_AUTH[@]}"
 ```
 
-Common platform IDs: `ethereum`, `polygon-pos`, `arbitrum-one`, `optimistic-ethereum`, `base`, `avalanche`, `binance-smart-chain`. For the full list, see `./references/PLATFORMS.md`.
+Common platform IDs: `ethereum`, `polygon-pos`, `arbitrum-one`, `optimistic-ethereum`, `base`, `avalanche`, `binance-smart-chain`. For the full list, see `./references/platforms.md`.
 
 ### Token Logo
 
@@ -282,8 +282,8 @@ Do not use this fallback for error code 10002 (invalid key) — that indicates a
 
 ## Reference Files
 
-- **`./references/ENDPOINTS.md`** — Curated endpoint reference with parameters, response formats, and asset platform IDs
-- **`./references/PLATFORMS.md`** — Curated list of common asset platform IDs with chain mappings (query `/asset_platforms` for the full live index)
+- **`./references/endpoints.md`** — Curated endpoint reference with parameters, response formats, and asset platform IDs
+- **`./references/platforms.md`** — Curated list of common asset platform IDs with chain mappings (query `/asset_platforms` for the full live index)
 
 ## Fallback Documentation
 

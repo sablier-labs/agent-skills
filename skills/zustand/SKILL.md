@@ -159,7 +159,7 @@ declare module "zustand" {
 Select only what you need to minimize re-renders. Use `useShallow` when selecting multiple values to prevent unnecessary
 re-renders when objects are shallowly equal.
 
-**See `./references/BEGINNER_TYPESCRIPT.md`** for detailed selector patterns and `useShallow` usage.
+**See `./references/beginner-typescript.md`** for detailed selector patterns and `useShallow` usage.
 
 ### State Updates
 
@@ -175,7 +175,7 @@ Zustand excels at:
 - **Store reset** - Return to initial state
 - **Multiple stores** - Domain-specific state separation
 
-**See `./references/BEGINNER_TYPESCRIPT.md`** for complete pattern implementations with code examples.
+**See `./references/beginner-typescript.md`** for complete pattern implementations with code examples.
 
 ## Middleware
 
@@ -187,7 +187,7 @@ Zustand provides middleware for enhanced functionality:
 
 Middleware can be stacked together. Place `devtools` as the outermost middleware for best type inference.
 
-**See `./references/BEGINNER_TYPESCRIPT.md`** for detailed middleware usage, configuration options, and composition
+**See `./references/beginner-typescript.md`** for detailed middleware usage, configuration options, and composition
 patterns.
 
 ## Best Practices
@@ -211,7 +211,7 @@ patterns.
 
 ### Testing
 
-For testing Zustand stores, consult `./references/TESTING.md` for complete Vitest setup, automatic state reset
+For testing Zustand stores, consult `./references/testing.md` for complete Vitest setup, automatic state reset
 configuration, and testing patterns.
 
 ## React 19 Compatibility
@@ -222,14 +222,14 @@ Zustand is fully compatible with React 19. No special configuration needed for N
 
 For detailed implementations and advanced patterns, consult the reference files:
 
-**`./references/BEGINNER_TYPESCRIPT.md`**
+**`./references/beginner-typescript.md`**
 
 - Complete pattern implementations with code examples
 - Middleware configuration (`combine`, `devtools`, `persist`)
 - Type extraction, selectors, async operations
 - Multiple stores organization
 
-**`./references/ADVANCED_TYPESCRIPT.md`**
+**`./references/advanced-typescript.md`**
 
 - Type inference mechanics and why `create<T>()()` is required
 - Slices pattern for large stores
@@ -237,7 +237,7 @@ For detailed implementations and advanced patterns, consult the reference files:
 - Vanilla stores (non-React usage)
 - Store mutators and advanced TypeScript patterns
 
-**`./references/TESTING.md`**
+**`./references/testing.md`**
 
 - Testing Zustand stores with Vitest
 - Automatic state reset setup

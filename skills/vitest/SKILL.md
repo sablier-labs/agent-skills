@@ -345,9 +345,9 @@ nlx vitest --run                 # Disable watch mode
 
 For deeper dives, see the `./references/` directory:
 
-- **`TESTING_PATTERNS.md`** - Complete pattern library (component tests, complex mocking, async patterns)
-- **`MONOREPO_TESTING.md`** - Workspace-specific strategies (shared vs. app tests, path aliases, organization)
-- **`TROUBLESHOOTING.md`** - Debug guide (common errors, performance, coverage, CI/CD)
+- **`testing-patterns.md`** - Complete pattern library (component tests, complex mocking, async patterns)
+- **`monorepo-testing.md`** - Workspace-specific strategies (shared vs. app tests, path aliases, organization)
+- **`troubleshooting.md`** - Debug guide (common errors, performance, coverage, CI/CD)
 
 # Coverage Analysis
 
@@ -389,8 +389,8 @@ Example config: `vitest.config.ts`
 # Next Steps
 
 1. **For Zustand store testing** - Activate `zustand` skill
-2. **For component testing** - See `./references/TESTING_PATTERNS.md` (React Testing Library setup)
-3. **For monorepo-specific strategies** - See `./references/MONOREPO_TESTING.md`
-4. **For debugging help** - See `./references/TROUBLESHOOTING.md`
+2. **For component testing** - See `./references/testing-patterns.md` (React Testing Library setup)
+3. **For monorepo-specific strategies** - See `./references/monorepo-testing.md`
+4. **For debugging help** - See `./references/troubleshooting.md`
 
 Start with simple unit tests, add component tests as needed.
