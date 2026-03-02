@@ -1,5 +1,5 @@
 ---
-name: web3-btt
+name: btt
 description: Write bulloak tree specifications (.tree files) for smart contract integration tests. Trigger phrases - write a tree, create test tree, BTT spec, bulloak tree, Branching Tree Technique, or when writing integration tests for contract functions.
 ---
 

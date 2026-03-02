@@ -1,5 +1,5 @@
 ---
-name: web3-viem
+name: viem
 description: This skill should be used when the user asks about "viem", "viem client", "viem actions", "TypeScript Ethereum", "createPublicClient", "createWalletClient", "parseEther", "formatEther", "readContract", "writeContract", or mentions using viem for blockchain interactions.
 ---
 
