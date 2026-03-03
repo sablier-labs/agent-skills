@@ -2,20 +2,16 @@
 
 ## Program
 
-The Sablier Lockup program on Solana supports Linear (LL) and Tranched (LT) streams. Dynamic (LD) streams are not
-available on Solana.
+The Sablier Lockup program on Solana supports Linear (LL) and Tranched (LT) streams. Dynamic (LD) streams are not available on Solana.
 
-Look up the deployed program ID at the
-[Solana Deployments page](https://docs.sablier.com/solana/deployments). Do not hardcode the address.
+Look up the deployed program ID at the [Solana Deployments page](https://docs.sablier.com/solana/deployment-addresses). Do not hardcode the address.
 
 ## Prerequisites
 
 Before calling any create instruction:
 
-1. **Fund the funder's ATA.** The funder must have an Associated Token Account (ATA) for the deposit token with
-   sufficient balance.
-2. **Include the creation fee.** Send approximately $1 USD worth of SOL to the Sablier treasury in the same
-   transaction. See the main SKILL.md for details on treasury address verification.
+1. **Fund the funder's ATA.** The funder must have an Associated Token Account (ATA) for the deposit token with sufficient balance.
+2. **Include the creation fee.** Send approximately $1 USD worth of SOL to the Sablier treasury in the same transaction. See the main SKILL.md for details on treasury address verification.
 
 ## Required Accounts (All Instructions)
 
@@ -27,7 +23,7 @@ Every create instruction requires the same set of accounts:
 | `funder_ata`               | Mutable         | Funder's ATA for the deposit token                                               |
 | `recipient`                | Read-only       | Receives the stream NFT                                                          |
 | `sender`                   | Read-only       | Has cancel authority (can differ from funder)                                    |
-| `treasury`                 | Read-only       | Sablier Treasury PDA, seeds: `[b"treasury"]`                                     |
+| `treasury`                 | Read-only       | Sablier Treasury PDA — derive from Lockup program ID + seeds `[b"treasury"]`     |
 | `stream_nft_collection`    | Mutable         | Stream NFT collection PDA, seeds: `[b"stream_nft_collection"]`                   |
 | `deposit_token_mint`       | Read-only       | SPL Token mint for the deposited token                                           |
 | `stream_data`              | Init            | PDA storing stream state, seeds: `[b"stream_data", stream_nft.key()]`            |
@@ -46,9 +42,7 @@ Every create instruction requires the same set of accounts:
 seeds = [b"stream_nft", sender_pubkey, salt_le_bytes]
 ```
 
-The `salt` is a `u128` value serialized as little-endian bytes. Each `(sender, salt)` pair produces a unique stream NFT
-address. Callers must use a unique salt for each stream created by the same sender. Use a random `u128` (e.g., 16 random
-bytes interpreted as a little-endian integer) to avoid collisions with previously created streams.
+The `salt` is a `u128` value serialized as little-endian bytes. Each `(sender, salt)` pair produces a unique stream NFT address. Callers must use a unique salt for each stream created by the same sender. Use a random `u128` (e.g., 16 random bytes interpreted as a little-endian integer) to avoid collisions with previously created streams.
 
 ### Stream Data
 
@@ -62,7 +56,10 @@ Derived from the stream NFT address.
 
 ```
 seeds = [b"treasury"]
+program_id = <Lockup program ID from deployment-addresses page>
 ```
+
+Derive using `findProgramAddress([Buffer.from("treasury")], lockupProgramId)`. The Lockup program ID is listed at the [Solana Deployment Addresses](https://docs.sablier.com/solana/deployment-addresses) page.
 
 ## Linear (LL) Streams
 
@@ -85,7 +82,7 @@ Create a linear stream with absolute Unix timestamps.
 
 ### create_with_durations_ll
 
-Create a linear stream with relative durations. Timestamps are calculated from the current clock time.
+Create a linear stream with relative durations. Timestamps are calculated from the current block time.
 
 **Instruction parameters:**
 
@@ -142,12 +139,12 @@ Create a tranched stream with relative durations.
 
 **Instruction parameters:**
 
-| Parameter           | Type       | Description                               |
-| ------------------- | ---------- | ----------------------------------------- |
-| `salt`              | `u128`     | Unique nonce for PDA derivation           |
-| `tranche_amounts`   | `Vec<u64>` | Token amounts for each tranche            |
-| `tranche_durations` | `Vec<u64>` | Duration in seconds from previous tranche |
-| `is_cancelable`     | `bool`     | Whether sender can cancel the stream      |
+| Parameter           | Type       | Description                                                             |
+| ------------------- | ---------- | ----------------------------------------------------------------------- |
+| `salt`              | `u128`     | Unique nonce for PDA derivation                                         |
+| `tranche_amounts`   | `Vec<u64>` | Token amounts for each tranche                                          |
+| `tranche_durations` | `Vec<u64>` | Duration in seconds (first from start time, rest from previous tranche) |
+| `is_cancelable`     | `bool`     | Whether sender can cancel the stream                                    |
 
 `tranche_amounts` and `tranche_durations` must have the same length.
 
@@ -159,7 +156,7 @@ Create a tranched stream with relative durations.
 - `start_time < first tranche timestamp`
 - Tranche timestamps strictly ascending
 - All tranche amounts > 0
-- Sum of tranche amounts must not overflow `u64`
+- Sum of tranche amounts = deposit amount
 
 ### Unlock Calculation
 
@@ -169,25 +166,10 @@ streamed = sum of all tranche.amount where tranche.timestamp <= current_time
 
 Tokens unlock in discrete steps — nothing streams between tranches.
 
-## Key Differences from EVM
-
-| Feature              | EVM                         | Solana                 |
-| -------------------- | --------------------------- | ---------------------- |
-| Dynamic (LD) streams | Yes                         | No                     |
-| Transferable flag    | Yes                         | No                     |
-| NFT standard         | ERC-721                     | MPL Core               |
-| Stream ID            | Auto-incrementing `uint256` | PDA (Pubkey)           |
-| Salt for uniqueness  | Not required                | Required (`u128`)      |
-| Deposit amount type  | `uint128`                   | `u64`                  |
-| Timestamp type       | `uint40`                    | `u64`                  |
-| Max tranches         | Gas-bounded                 | 30                     |
-| Token standard       | ERC-20                      | SPL Token / Token-2022 |
-| Fee mechanism        | `msg.value`                 | Separate SOL transfer  |
-
 ## Stream NFT
 
 Each stream mints an MPL Core asset (NFT) owned by the recipient. The NFT name follows the format:
 
 ```
-"Sablier [LL|LT] Stream #[first 5 chars of key]...[last 5 chars of key]"
+"Sablier [LL|LT] Stream #[first 5 chars of stream_nft key]...[last 5 chars of stream_nft key]"
 ```

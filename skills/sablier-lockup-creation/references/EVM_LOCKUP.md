@@ -4,17 +4,14 @@
 
 All Lockup streams are created through a single contract: **`ISablierLockup`** (deployed as `SablierLockup`).
 
-Look up the deployed address for your target chain at the
-[Lockup Deployments page](https://docs.sablier.com/guides/lockup/deployments). Do not hardcode addresses.
+Look up the deployed address for your target chain at the [Lockup Deployments page](https://docs.sablier.com/guides/lockup/deployments). Do not hardcode addresses.
 
 ## Prerequisites
 
 Before calling any create function:
 
-1. **Approve the token transfer.** The Lockup contract pulls tokens from the caller. Call
-   `token.approve(lockupAddress, depositAmount)` on the ERC-20 token contract first.
-2. **Include the creation fee.** Send approximately $1 USD worth of the native token as `msg.value` with the create
-   transaction. See the main SKILL.md for details.
+1. **Approve the token transfer.** The Lockup contract pulls tokens from the caller. Call `token.approve(lockupAddress, depositAmount)` on the ERC-20 token contract first.
+2. **Include the creation fee.** Send approximately $1 USD worth of the native token as `msg.value` with the create transaction. See the main SKILL.md for details.
 
 ## Shared Structs
 
@@ -97,6 +94,7 @@ function createWithTimestampsLL(
 ### Validation Rules
 
 - `depositAmount > 0`
+- `startTime > 0` (timestamps variant; durations variant auto-sets to `block.timestamp`)
 - `start < end` (timestamps) or `total > 0` (durations)
 - If cliff is set: `start < cliff < end`
 - If no cliff: `unlockAmounts.cliff` must be 0
@@ -128,7 +126,7 @@ struct Segment {
 struct SegmentWithDuration {
     uint128 amount;
     UD2x18 exponent;
-    uint40 duration; // Seconds from previous segment end
+    uint40 duration; // Seconds (first from start time, rest from previous segment end)
 }
 ```
 
@@ -176,7 +174,7 @@ struct Tranche {
 // LockupTranched.TrancheWithDuration
 struct TrancheWithDuration {
     uint128 amount;
-    uint40 duration; // Seconds from previous tranche
+    uint40 duration; // Seconds (first from start time, rest from previous tranche)
 }
 ```
 
@@ -209,14 +207,12 @@ function createWithTimestampsLT(
 | `WithTimestamps` | Known exact dates              | You specify `timestamps.start` |
 | `WithDurations`  | Relative timing ("starts now") | Auto-set to `block.timestamp`  |
 
-With durations, the contract calculates absolute timestamps by adding durations to `block.timestamp`. This means the
-stream starts immediately when the transaction is mined.
+With durations, the contract calculates absolute timestamps by adding durations to `block.timestamp`. This means the stream starts immediately when the transaction is mined.
 
 ## The `shape` Parameter
 
-The `shape` field is a free-form string used only for display purposes in the Sablier UI and indexers. Recommended
-values:
+The `shape` field is a string used by the Sablier UI and indexers to display stream information correctly. Use one of the values from the [SDK shape definitions](https://github.com/sablier-labs/sdk/blob/main/src/shapes/enums.ts):
 
-- Linear streams: `"Linear"` or `"Cliff"`
-- Dynamic streams: `"Exponential"`, `"Logarithmic"`, or a custom label
-- Tranched streams: `"Monthly"`, `"Quarterly"`, `"Yearly"`, or a custom label
+- Linear (LL): `"linear"`, `"cliff"`, `"linearUnlockLinear"`, `"linearUnlockCliff"`, `"linearTimelock"`
+- Dynamic (LD): `"dynamicExponential"`, `"dynamicCliffExponential"`, `"dynamicMonthly"`, `"dynamicStepper"`, `"dynamicTimelock"`, `"dynamicUnlockCliff"`, `"dynamicUnlockLinear"`, `"dynamicDoubleUnlock"`
+- Tranched (LT): `"tranchedStepper"`, `"tranchedMonthly"`, `"tranchedBackweighted"`, `"tranchedTimelock"`

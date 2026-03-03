@@ -1,7 +1,6 @@
 # Lockup Stream Type Guide
 
-For help choosing between Sablier products (Lockup vs. Flow vs. Airdrops), see the `sablier-product-selection` skill.
-This page covers only the Lockup stream types: LL, LD, and LT.
+For help choosing between Sablier products (Lockup vs. Flow vs. Airdrops), see the `sablier-product-selection` skill. This page covers only the Lockup stream types: LL, LD, and LT.
 
 ## Lockup Type Summary
 

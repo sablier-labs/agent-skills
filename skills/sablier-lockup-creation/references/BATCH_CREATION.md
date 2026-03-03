@@ -1,181 +1,84 @@
-# Batch Lockup Stream Creation (EVM Only)
+# Batch Lockup Stream Creation
 
-Batch stream creation is currently available on EVM only.
+## EVM
 
-## Contract
+### Contract
 
 Batch operations use a separate contract: **`ISablierBatchLockup`** (deployed as `SablierBatchLockup`).
 
-Look up the deployed address at the
-[Lockup Deployments page](https://docs.sablier.com/guides/lockup/deployments).
+Look up the deployed address at the [Lockup Deployments page](https://docs.sablier.com/guides/lockup/deployments).
 
-## Prerequisites
+### Prerequisites
 
 1. **Approve tokens to the BatchLockup contract** (not the Lockup contract). The batch contract handles the transfer.
-2. **Include the creation fee.** Send approximately $1 USD worth of native token per stream as `msg.value`. See the main
-   SKILL.md for details.
 
-## Batch Create Functions
+### Batch Create Functions
 
 Each stream type has two batch variants (timestamps and durations):
 
-### Linear (LL)
+#### Linear (LL)
 
 ```solidity
 function createWithDurationsLL(
     ISablierLockup lockup,
     IERC20 token,
     BatchLockup.CreateWithDurationsLL[] calldata batch
-) external payable returns (uint256[] memory streamIds);
+) external returns (uint256[] memory streamIds);
 
 function createWithTimestampsLL(
     ISablierLockup lockup,
     IERC20 token,
     BatchLockup.CreateWithTimestampsLL[] calldata batch
-) external payable returns (uint256[] memory streamIds);
+) external returns (uint256[] memory streamIds);
 ```
 
-### Dynamic (LD)
+#### Dynamic (LD)
 
 ```solidity
 function createWithDurationsLD(
     ISablierLockup lockup,
     IERC20 token,
     BatchLockup.CreateWithDurationsLD[] calldata batch
-) external payable returns (uint256[] memory streamIds);
+) external returns (uint256[] memory streamIds);
 
 function createWithTimestampsLD(
     ISablierLockup lockup,
     IERC20 token,
     BatchLockup.CreateWithTimestampsLD[] calldata batch
-) external payable returns (uint256[] memory streamIds);
+) external returns (uint256[] memory streamIds);
 ```
 
-### Tranched (LT)
+#### Tranched (LT)
 
 ```solidity
 function createWithDurationsLT(
     ISablierLockup lockup,
     IERC20 token,
     BatchLockup.CreateWithDurationsLT[] calldata batch
-) external payable returns (uint256[] memory streamIds);
+) external returns (uint256[] memory streamIds);
 
 function createWithTimestampsLT(
     ISablierLockup lockup,
     IERC20 token,
     BatchLockup.CreateWithTimestampsLT[] calldata batch
-) external payable returns (uint256[] memory streamIds);
+) external returns (uint256[] memory streamIds);
 ```
 
-## Batch Struct Definitions
+### Batch Struct Definitions
 
-Each batch element wraps the per-stream parameters from the single-stream create functions (see
-[EVM_LOCKUP.md](EVM_LOCKUP.md) for the base struct definitions).
+Each batch element wraps the per-stream parameters from the single-stream create functions — see [EVM_LOCKUP.md](EVM_LOCKUP.md) for struct definitions. The `token` is passed as a top-level parameter to the batch function, not per-stream.
 
-```solidity
-// Linear — durations variant
-struct CreateWithDurationsLL {
-    address sender;
-    address recipient;
-    uint128 depositAmount;
-    bool cancelable;
-    bool transferable;
-    LockupLinear.Durations durations;
-    LockupLinear.UnlockAmounts unlockAmounts;
-    string shape;
-}
+## Solana
 
-// Linear — timestamps variant
-struct CreateWithTimestampsLL {
-    address sender;
-    address recipient;
-    uint128 depositAmount;
-    bool cancelable;
-    bool transferable;
-    Lockup.Timestamps timestamps;
-    uint40 cliffTime;
-    LockupLinear.UnlockAmounts unlockAmounts;
-    string shape;
-}
+On Solana, there is no separate batch program. To create multiple streams, include multiple create instructions in a single transaction, each with a **unique salt**.
 
-// Dynamic — durations variant
-struct CreateWithDurationsLD {
-    address sender;
-    address recipient;
-    uint128 depositAmount;
-    bool cancelable;
-    bool transferable;
-    LockupDynamic.SegmentWithDuration[] segmentsWithDuration;
-    string shape;
-}
+### Approach
 
-// Dynamic — timestamps variant
-struct CreateWithTimestampsLD {
-    address sender;
-    address recipient;
-    uint128 depositAmount;
-    bool cancelable;
-    bool transferable;
-    uint40 startTime;
-    LockupDynamic.Segment[] segments;
-    string shape;
-}
+1. Build one create instruction per stream (e.g., `create_with_timestamps_ll`, `create_with_durations_lt`) using the parameters from [SOLANA_LOCKUP.md](SOLANA_LOCKUP.md).
+2. Assign a unique `salt` (random `u128`) to each instruction — this ensures each stream gets a unique PDA.
+3. Include a `SystemProgram.transfer` fee instruction per stream (~$1 USD in SOL to the treasury). See the main SKILL.md for treasury derivation details.
+4. Combine all instructions into a single Solana transaction.
 
-// Tranched — durations variant
-struct CreateWithDurationsLT {
-    address sender;
-    address recipient;
-    uint128 depositAmount;
-    bool cancelable;
-    bool transferable;
-    LockupTranched.TrancheWithDuration[] tranchesWithDuration;
-    string shape;
-}
+### Limits
 
-// Tranched — timestamps variant
-struct CreateWithTimestampsLT {
-    address sender;
-    address recipient;
-    uint128 depositAmount;
-    bool cancelable;
-    bool transferable;
-    uint40 startTime;
-    LockupTranched.Tranche[] tranches;
-    string shape;
-}
-```
-
-**Note:** The `token` is passed as a top-level parameter to the batch function, not per-stream. For the full source, see
-the [BatchLockup types](https://github.com/sablier-labs/lockup/blob/main/src/types/BatchLockup.sol).
-
-## CSV Upload via Sablier UI
-
-The Sablier web interface at [app.sablier.com](https://app.sablier.com) supports bulk stream creation via CSV upload.
-
-### Capabilities
-
-- Create up to **280 streams** in a single batch
-- Downloadable CSV templates available in the UI
-- Supports all three stream types (LL, LD, LT)
-
-### Workflow
-
-1. Navigate to the stream creation page on [app.sablier.com](https://app.sablier.com)
-2. Select "CSV Upload" as the creation method
-3. Download the template for your chosen stream type
-4. Fill in recipient addresses, amounts, and schedule parameters
-5. Upload the completed CSV
-6. Review the preview and confirm the transaction
-
-### CSV Format Notes
-
-- Amounts should be in human-readable format (e.g., `1000` not `1000000000000000000`)
-- Addresses must be valid checksummed Ethereum addresses
-- Timestamps use Unix epoch format
-- Download the latest template from the UI to ensure compatibility with the current version
-
-## Limits
-
-- **UI batch**: up to 280 streams per transaction
-- **On-chain batch**: limited by block gas limit (varies by chain)
-- **Practical recommendation**: test with small batches first, then scale up
+Solana transactions are capped at **1232 bytes**. The number of streams per transaction depends on the instruction size, which varies by stream type and number of tranches. Test with small batches first.

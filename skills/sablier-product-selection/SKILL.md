@@ -7,8 +7,7 @@ description: This skill should be used when the user asks "which Sablier product
 
 ## Overview
 
-Sablier offers three products for onchain token distribution. This skill helps choose the right one for a given use
-case, then routes to the appropriate creation skill.
+Sablier offers three products for onchain token distribution. This skill helps choose the right one for a given use case, then routes to the appropriate creation skill.
 
 | Product      | Purpose                                                    | Chains       |
 | ------------ | ---------------------------------------------------------- | ------------ |
