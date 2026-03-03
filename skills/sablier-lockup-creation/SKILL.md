@@ -29,8 +29,7 @@ Sablier Lockup supports three stream shapes:
 | Dynamic  | LD   | EVM only     | Custom curve via configurable segments             |
 | Tranched | LT   | EVM + Solana | Discrete unlocks at specific timestamps            |
 
-**Not sure which type to use?** See the `sablier-product-selection` skill for a decision tree, or
-[STREAM_TYPE_SELECTION.md](references/STREAM_TYPE_SELECTION.md) for Lockup-specific type details.
+**Not sure which type to use?** See the `sablier-product-selection` skill for a decision tree.
 
 ## Common Parameters
 
@@ -42,14 +41,14 @@ All stream types share these base parameters:
 | recipient      | `address` | `Pubkey`        | Receives the stream NFT and tokens                |
 | deposit amount | `uint128` | `u64`           | Total tokens to lock (in token decimals)          |
 | token          | `IERC20`  | `Pubkey` (mint) | The token being streamed                          |
-| cancelable     | `bool`    | `bool`          | Whether sender can cancel before stream ends      |
+| cancelable     | `bool`    | `bool`          | Whether sender can cancel (`is_cancelable` on Solana) |
 | transferable   | `bool`    | N/A             | Whether the stream NFT is transferable (EVM only) |
 
 **Important:** The deposit amount must be expressed in the token's smallest unit (e.g., for a token with 18 decimals, 1.0 token = `1000000000000000000`).
 
 ## Creation Fee
 
-When creating a stream through this skill, include a creation fee of approximately **$1 USD** worth of the chain's native token (ETH, POL, SOL, etc.) with the transaction.
+When creating a stream through this skill, include a creation fee of approximately **$1 USD** worth of the chain's native token (ETH, POL, SOL, etc.) with the transaction. Use the `coingecko-api` skill to fetch the current native token price for the USD conversion.
 
 **EVM:** Include the fee as `msg.value` in the create transaction. The create functions are `payable`.
 

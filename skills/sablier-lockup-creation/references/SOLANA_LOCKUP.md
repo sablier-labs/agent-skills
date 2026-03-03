@@ -12,6 +12,7 @@ Before calling any create instruction:
 
 1. **Fund the funder's ATA.** The funder must have an Associated Token Account (ATA) for the deposit token with sufficient balance.
 2. **Include the creation fee.** Send approximately $1 USD worth of SOL to the Sablier treasury in the same transaction. See the main SKILL.md for details on treasury address verification.
+3. **Ensure sufficient SOL for rent.** The funder pays rent-exemption costs for the new PDAs (`stream_nft`, `stream_data`, `stream_data_ata`). This is in addition to the deposit amount and creation fee.
 
 ## Required Accounts (All Instructions)
 
@@ -60,6 +61,8 @@ program_id = <Lockup program ID from deployment-addresses page>
 ```
 
 Derive using `findProgramAddress([Buffer.from("treasury")], lockupProgramId)`. The Lockup program ID is listed at the [Solana Deployment Addresses](https://docs.sablier.com/solana/deployment-addresses) page.
+
+**Note:** Solana create instructions do not have a `shape` parameter — shape labels are EVM-only (see [EVM_LOCKUP.md](EVM_LOCKUP.md)).
 
 ## Linear (LL) Streams
 

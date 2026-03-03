@@ -41,7 +41,8 @@ Q3: Must you use Solana?
 
 Q4: Can the curve be approximated with discrete unlock steps?
 ├─ Yes ──► ✅ LT (Tranched) on Solana — see `sablier-lockup-creation`
-└─ No ──► ✅ LL (Linear) on Solana — see `sablier-lockup-creation`
+└─ No ──► Custom curves are not available on Solana. LL (Linear) is the closest alternative.
+   see `sablier-lockup-creation`
 
 Q5: Do tokens unlock continuously or at discrete intervals?
 ├─ Continuously (with optional cliff and/or start unlock) ──► ✅ LL (Linear) on EVM or Solana
@@ -115,3 +116,7 @@ Merkle-tree based distribution for large recipient sets:
 - Optional vesting — tokens can stream after claim
 - Clawback support for unclaimed allocations
 - EVM + Solana
+
+## Resources
+
+- [Sablier Documentation](https://docs.sablier.com)

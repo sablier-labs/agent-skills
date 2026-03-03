@@ -12,6 +12,8 @@ Look up the deployed address at the [Lockup Deployments page](https://docs.sabli
 
 1. **Approve tokens to the BatchLockup contract** (not the Lockup contract). The batch contract handles the transfer.
 
+**Note:** The EVM batch contract is not `payable` — creation fees cannot be included in batch transactions.
+
 ### Batch Create Functions
 
 Each stream type has two batch variants (timestamps and durations):

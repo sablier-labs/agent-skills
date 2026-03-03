@@ -27,7 +27,7 @@ struct CreateWithDurations {
     IERC20 token;         // ERC-20 token address
     bool cancelable;      // Whether sender can cancel
     bool transferable;    // Whether stream NFT is transferable
-    string shape;         // Display label (e.g., "Linear", "Exponential")
+    string shape;         // Display label — see shape parameter section below
 }
 ```
 
@@ -154,6 +154,8 @@ function createWithTimestampsLD(
 
 ### Validation Rules
 
+- `depositAmount > 0`
+- `startTime > 0` (timestamps variant; durations variant auto-sets to `block.timestamp`)
 - At least one segment
 - Segment timestamps strictly ascending
 - Last segment timestamp = `timestamps.end`
@@ -194,6 +196,8 @@ function createWithTimestampsLT(
 
 ### Validation Rules
 
+- `depositAmount > 0`
+- `startTime > 0` (timestamps variant; durations variant auto-sets to `block.timestamp`)
 - At least one tranche
 - Tranche timestamps strictly ascending
 - `start < first_tranche_timestamp`
