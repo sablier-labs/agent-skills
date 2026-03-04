@@ -15,7 +15,7 @@ This skill covers Lockup stream **creation** only. For other Sablier products an
 - Protocol overview → `sablier-protocol`
 - EVM contract deployment → `evm-deployment`
 - Flow streams (open-ended payroll, adjustable rate) → `sablier-flow-creation` (coming soon)
-- Merkle Airdrops (instant distribution to many recipients) → `sablier-airdrop-creation` (coming soon)
+- Merkle Airdrops (instant distribution to many recipients) → `sablier-create-airdrop` (coming soon)
 
 **Supported chains:** 27+ EVM chains (Ethereum, Arbitrum, Optimism, Base, Polygon, etc.) and Solana.
 
@@ -35,14 +35,14 @@ Sablier Lockup supports three stream shapes:
 
 All stream types share these base parameters:
 
-| Parameter      | EVM Type  | Solana Type     | Description                                       |
-| -------------- | --------- | --------------- | ------------------------------------------------- |
-| sender         | `address` | `Pubkey`        | Has cancel/renounce authority over the stream     |
-| recipient      | `address` | `Pubkey`        | Receives the stream NFT and tokens                |
-| deposit amount | `uint128` | `u64`           | Total tokens to lock (in token decimals)          |
-| token          | `IERC20`  | `Pubkey` (mint) | The token being streamed                          |
+| Parameter      | EVM Type  | Solana Type     | Description                                           |
+| -------------- | --------- | --------------- | ----------------------------------------------------- |
+| sender         | `address` | `Pubkey`        | Has cancel/renounce authority over the stream         |
+| recipient      | `address` | `Pubkey`        | Receives the stream NFT and tokens                    |
+| deposit amount | `uint128` | `u64`           | Total tokens to lock (in token decimals)              |
+| token          | `IERC20`  | `Pubkey` (mint) | The token being streamed                              |
 | cancelable     | `bool`    | `bool`          | Whether sender can cancel (`is_cancelable` on Solana) |
-| transferable   | `bool`    | N/A             | Whether the stream NFT is transferable (EVM only) |
+| transferable   | `bool`    | N/A             | Whether the stream NFT is transferable (EVM only)     |
 
 **Important:** The deposit amount must be expressed in the token's smallest unit (e.g., for a token with 18 decimals, 1.0 token = `1000000000000000000`).
 
@@ -76,6 +76,6 @@ Each stream type offers two creation methods:
 
 - [Sablier Documentation](https://docs.sablier.com)
 - [Lockup Contracts (EVM)](https://github.com/sablier-labs/lockup)
-- [Solana Programs](https://github.com/sablier-labs/solsab)
+- [Solana Lockup Program](https://github.com/sablier-labs/solsab/tree/main/programs/lockup)
 - [EVM Integration Examples](https://github.com/sablier-labs/evm-examples)
 - [Solana Client Integration (Lockup)](https://docs.sablier.com/solana/client-integration/lockup)

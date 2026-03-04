@@ -11,7 +11,7 @@ function batch(bytes[] calldata calls) external payable returns (bytes[] memory 
 ### Prerequisites
 
 1. **Approve tokens to the Lockup contract.** The batch call executes on `SablierLockup` itself (via `delegatecall`), so tokens are pulled from the caller by the Lockup contract — not a separate batch contract.
-2. **Include the total creation fee.** Send `~$1 USD × number of streams` worth of native token as `msg.value`. Since `batch()` is `payable` and each sub-call sees the same `msg.value` via `delegatecall`, the total fee covers all streams.
+2. **Include the total creation fee.** Send the total fee as `msg.value` (see the main SKILL.md for the per-stream fee amount). The contract handles per-stream fee accounting internally.
 
 ### Approach
 
@@ -28,7 +28,6 @@ bytes[] memory calls = new bytes[](2);
 calls[0] = abi.encodeCall(lockup.createWithDurationsLL, (llParams, unlockAmounts, durations));
 calls[1] = abi.encodeCall(lockup.createWithTimestampsLT, (ltParams, tranches));
 
-// Fee: ~$1 per stream in native token
 lockup.batch{ value: totalFee }(calls);
 ```
 
@@ -41,7 +40,7 @@ On Solana, there is no separate batch program. To create multiple streams, inclu
 
 1. Build one create instruction per stream (e.g., `create_with_timestamps_ll`, `create_with_durations_lt`) using the parameters from [solana-lockup.md](solana-lockup.md).
 2. Assign a unique `salt` (random `u128`) to each instruction — this ensures each stream gets a unique PDA.
-3. Include a `SystemProgram.transfer` fee instruction per stream (~$1 USD in SOL to the treasury). See the main SKILL.md for treasury derivation details.
+3. Include a `SystemProgram.transfer` fee instruction per stream (see the main SKILL.md for the per-stream fee amount and treasury derivation).
 4. Combine all instructions into a single Solana transaction.
 
 ### Limits

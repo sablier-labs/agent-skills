@@ -31,7 +31,7 @@ Every create instruction requires the same set of accounts:
 | `stream_data_ata`          | Init            | ATA for deposit tokens owned by `stream_data`                                    |
 | `stream_nft`               | Init            | MPL Core asset (NFT), seeds: `[b"stream_nft", sender.key(), salt.to_le_bytes()]` |
 | `associated_token_program` | Program         | Associated Token Program                                                         |
-| `deposit_token_program`    | Program         | Token Program or Token-2022                                                      |
+| `deposit_token_program`    | Program         | Token Program (SPL or Token-2022)                                                |
 | `mpl_core_program`         | Program         | Metaplex Core Program                                                            |
 | `system_program`           | Program         | System Program                                                                   |
 
@@ -63,6 +63,8 @@ program_id = <Lockup program ID from deployment-addresses page>
 Derive using `findProgramAddress([Buffer.from("treasury")], lockupProgramId)`. The Lockup program ID is listed at the [Solana Deployment Addresses](https://docs.sablier.com/solana/deployment-addresses) page.
 
 **Note:** Solana create instructions do not have a `shape` parameter — shape labels are EVM-only (see [evm-lockup.md](evm-lockup.md)).
+
+**Note:** The default compute unit limit (200k) may be insufficient for create instructions, especially for tranched streams with many tranches. Include a `ComputeBudgetProgram.setComputeUnitLimit` pre-instruction with a higher limit.
 
 ## Linear (LL) Streams
 
@@ -110,8 +112,6 @@ Create a linear stream with relative durations. Timestamps are calculated from t
 - Durations variant: `total_duration > 0`, `cliff_duration < total_duration`
 
 ### Unlock Calculation
-
-Same as EVM:
 
 1. Before `start_time`: 0 tokens
 2. At `start_time`: `start_unlock_amount` available
@@ -168,11 +168,3 @@ streamed = sum of all tranche.amount where tranche.timestamp <= current_time
 ```
 
 Tokens unlock in discrete steps — nothing streams between tranches.
-
-## Stream NFT
-
-Each stream mints an MPL Core asset (NFT) owned by the recipient. The NFT name follows the format:
-
-```
-"Sablier [LL|LT] Stream #[first 5 chars of stream_nft key]...[last 5 chars of stream_nft key]"
-```
