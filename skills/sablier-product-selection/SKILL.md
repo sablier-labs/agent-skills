@@ -17,7 +17,7 @@ Sablier offers three products for onchain token distribution. This skill helps c
 
 **Creation skills:**
 
-- Lockup streams (LL, LD, LT) → `sablier-lockup-creation`
+- Lockup streams (LL, LD, LT) → `sablier-create-vesting`
 - Flow streams → `sablier-flow-creation`
 - Merkle Airdrops → `sablier-airdrop-creation`
 
@@ -37,18 +37,18 @@ Q2: Do you need a custom unlock curve (exponential, logarithmic, etc.)?
 
 Q3: Must you use Solana?
 ├─ Yes ──► Q4
-└─ No ──► ✅ LD (Dynamic) on EVM — see `sablier-lockup-creation`
+└─ No ──► ✅ LD (Dynamic) on EVM — see `sablier-create-vesting`
 
 Q4: Can the curve be approximated with discrete unlock steps?
-├─ Yes ──► ✅ LT (Tranched) on Solana — see `sablier-lockup-creation`
+├─ Yes ──► ✅ LT (Tranched) on Solana — see `sablier-create-vesting`
 └─ No ──► Custom curves are not available on Solana. LL (Linear) is the closest alternative.
-   see `sablier-lockup-creation`
+   see `sablier-create-vesting`
 
 Q5: Do tokens unlock continuously or at discrete intervals?
 ├─ Continuously (with optional cliff and/or start unlock) ──► ✅ LL (Linear) on EVM or Solana
-│  see `sablier-lockup-creation`
+│  see `sablier-create-vesting`
 └─ At discrete intervals (monthly, quarterly, milestones) ──► ✅ LT (Tranched) on EVM or Solana
-   see `sablier-lockup-creation`
+   see `sablier-create-vesting`
 
 Q6: Must you use Solana?
 ├─ Yes ──► Q10
@@ -63,28 +63,28 @@ Q8: Do you need to adjust the payment rate over time?
 └─ No ──► Q9
 
 Q9: Do you want periodic payouts (e.g., monthly salary tranches)?
-├─ Yes ──► ✅ LT (Tranched) on EVM — see `sablier-lockup-creation`
+├─ Yes ──► ✅ LT (Tranched) on EVM — see `sablier-create-vesting`
 └─ No (continuous streaming) ──► ✅ Flow on EVM — see `sablier-flow-creation`
 
 Q10: Do you want periodic payouts (e.g., monthly salary tranches)?
-├─ Yes ──► ✅ LT (Tranched) on Solana — see `sablier-lockup-creation`
-└─ No (continuous streaming) ──► ✅ LL (Linear) on Solana — see `sablier-lockup-creation`
+├─ Yes ──► ✅ LT (Tranched) on Solana — see `sablier-create-vesting`
+└─ No (continuous streaming) ──► ✅ LL (Linear) on Solana — see `sablier-create-vesting`
 ```
 
 ## Quick Reference
 
 | Use Case                      | Recommended | Chain        | Creation Skill             |
 | ----------------------------- | ----------- | ------------ | -------------------------- |
-| Vesting with cliff            | LL          | EVM + Solana | `sablier-lockup-creation`  |
-| Simple linear vesting         | LL          | EVM + Solana | `sablier-lockup-creation`  |
-| Quarterly/monthly unlocks     | LT          | EVM + Solana | `sablier-lockup-creation`  |
-| Milestone-based unlocks       | LT          | EVM + Solana | `sablier-lockup-creation`  |
-| Custom unlock curve           | LD          | EVM only     | `sablier-lockup-creation`  |
+| Vesting with cliff            | LL          | EVM + Solana | `sablier-create-vesting`  |
+| Simple linear vesting         | LL          | EVM + Solana | `sablier-create-vesting`  |
+| Quarterly/monthly unlocks     | LT          | EVM + Solana | `sablier-create-vesting`  |
+| Milestone-based unlocks       | LT          | EVM + Solana | `sablier-create-vesting`  |
+| Custom unlock curve           | LD          | EVM only     | `sablier-create-vesting`  |
 | Open-ended payroll            | Flow        | EVM only     | `sablier-flow-creation`    |
 | Adjustable-rate payroll       | Flow        | EVM only     | `sablier-flow-creation`    |
 | Continuous payroll (EVM)      | Flow        | EVM only     | `sablier-flow-creation`    |
-| Payroll with monthly tranches | LT          | EVM + Solana | `sablier-lockup-creation`  |
-| Continuous payroll (Solana)   | LL          | Solana       | `sablier-lockup-creation`  |
+| Payroll with monthly tranches | LT          | EVM + Solana | `sablier-create-vesting`  |
+| Continuous payroll (Solana)   | LL          | Solana       | `sablier-create-vesting`  |
 | Airdrop to many recipients    | Merkle      | EVM + Solana | `sablier-airdrop-creation` |
 
 ## Product Comparison

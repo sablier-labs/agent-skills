@@ -1,5 +1,5 @@
 ---
-name: sablier-lockup-creation
+name: sablier-create-vesting
 description: This skill should be used when the user asks to "create a Sablier stream", "set up token vesting", "create a lockup stream", "stream tokens with Sablier", "create linear vesting", "create tranched vesting", "create a cliff vesting schedule", "set up employee vesting", "create a payment stream", or mentions Sablier Lockup stream creation, vesting schedules, or token streaming setup.
 ---
 
@@ -58,12 +58,12 @@ When creating a stream through this skill, include a creation fee of approximate
 
 ## Chain-Specific Guides
 
-- **EVM (Ethereum and L2s):** [EVM_LOCKUP.md](references/EVM_LOCKUP.md)
-- **Solana:** [SOLANA_LOCKUP.md](references/SOLANA_LOCKUP.md)
+- **EVM (Ethereum and L2s):** [evm-lockup.md](references/evm-lockup.md)
+- **Solana:** [solana-lockup.md](references/solana-lockup.md)
 
 ## Batch Creation
 
-For creating multiple streams in a single transaction, see [BATCH_CREATION.md](references/BATCH_CREATION.md).
+For creating multiple streams in a single transaction, see [batch-creation.md](references/batch-creation.md).
 
 ## Timestamps vs. Durations
 

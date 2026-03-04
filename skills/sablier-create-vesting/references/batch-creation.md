@@ -68,7 +68,7 @@ function createWithTimestampsLT(
 
 ### Batch Struct Definitions
 
-Each batch element wraps the per-stream parameters from the single-stream create functions — see [EVM_LOCKUP.md](EVM_LOCKUP.md) for struct definitions. The `token` is passed as a top-level parameter to the batch function, not per-stream.
+Each batch element wraps the per-stream parameters from the single-stream create functions — see [evm-lockup.md](evm-lockup.md) for struct definitions. The `token` is passed as a top-level parameter to the batch function, not per-stream.
 
 ## Solana
 
@@ -76,7 +76,7 @@ On Solana, there is no separate batch program. To create multiple streams, inclu
 
 ### Approach
 
-1. Build one create instruction per stream (e.g., `create_with_timestamps_ll`, `create_with_durations_lt`) using the parameters from [SOLANA_LOCKUP.md](SOLANA_LOCKUP.md).
+1. Build one create instruction per stream (e.g., `create_with_timestamps_ll`, `create_with_durations_lt`) using the parameters from [solana-lockup.md](solana-lockup.md).
 2. Assign a unique `salt` (random `u128`) to each instruction — this ensures each stream gets a unique PDA.
 3. Include a `SystemProgram.transfer` fee instruction per stream (~$1 USD in SOL to the treasury). See the main SKILL.md for treasury derivation details.
 4. Combine all instructions into a single Solana transaction.

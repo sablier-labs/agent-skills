@@ -62,7 +62,7 @@ program_id = <Lockup program ID from deployment-addresses page>
 
 Derive using `findProgramAddress([Buffer.from("treasury")], lockupProgramId)`. The Lockup program ID is listed at the [Solana Deployment Addresses](https://docs.sablier.com/solana/deployment-addresses) page.
 
-**Note:** Solana create instructions do not have a `shape` parameter — shape labels are EVM-only (see [EVM_LOCKUP.md](EVM_LOCKUP.md)).
+**Note:** Solana create instructions do not have a `shape` parameter — shape labels are EVM-only (see [evm-lockup.md](evm-lockup.md)).
 
 ## Linear (LL) Streams
 
