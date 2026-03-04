@@ -19,7 +19,7 @@ Sablier offers three products for onchain token distribution. This skill helps c
 
 - Lockup streams (LL, LD, LT) → `sablier-create-vesting`
 - Flow streams → `sablier-flow-creation` (coming soon)
-- Merkle Airdrops → `sablier-create-airdrop` (coming soon)
+- Merkle Airdrops → `sablier-create-airdrop`
 
 ## Decision Tree
 
@@ -28,7 +28,7 @@ Follow this tree from top to bottom. Each question narrows down the recommended 
 ```
 Q1: What kind of token distribution do you need?
 ├─ Vesting (fixed schedule, tokens locked upfront) ──► Q2
-├─ Airdrop (distribute to many recipients) ──► see `sablier-create-airdrop` skill (coming soon)
+├─ Airdrop (distribute to many recipients) ──► see `sablier-create-airdrop` skill
 └─ Payroll / ongoing payments ──► Q6
 
 Q2: Do you need a custom unlock curve (exponential, logarithmic, etc.)?
@@ -85,7 +85,7 @@ Q10: Do you want periodic payouts (e.g., monthly salary tranches)?
 | Continuous payroll (EVM)      | Flow        | EVM only     | `sablier-flow-creation` (coming soon)   |
 | Payroll with monthly tranches | LT          | EVM + Solana | `sablier-create-vesting`                |
 | Continuous payroll (Solana)   | LL          | Solana       | `sablier-create-vesting`                |
-| Airdrop to many recipients    | Merkle      | EVM + Solana | `sablier-create-airdrop` (coming soon)  |
+| Airdrop to many recipients    | Merkle      | EVM + Solana | `sablier-create-airdrop`                |
 
 ## Product Comparison
 
