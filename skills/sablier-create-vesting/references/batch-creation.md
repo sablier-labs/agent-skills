@@ -2,73 +2,36 @@
 
 ## EVM
 
-### Contract
+`SablierLockup` inherits [`Batch`](https://github.com/sablier-labs/evm-utils/blob/main/src/Batch.sol), which exposes a `payable` `batch()` function that executes an array of encoded calls via `delegatecall`. This allows creating multiple streams — including mixed types (LL, LD, LT) — in a single transaction, with creation fees included.
 
-Batch operations use a separate contract: **`ISablierBatchLockup`** (deployed as `SablierBatchLockup`).
-
-Look up the deployed address at the [Lockup Deployments page](https://docs.sablier.com/guides/lockup/deployments).
+```solidity
+function batch(bytes[] calldata calls) external payable returns (bytes[] memory results);
+```
 
 ### Prerequisites
 
-1. **Approve tokens to the BatchLockup contract** (not the Lockup contract). The batch contract handles the transfer.
+1. **Approve tokens to the Lockup contract.** The batch call executes on `SablierLockup` itself (via `delegatecall`), so tokens are pulled from the caller by the Lockup contract — not a separate batch contract.
+2. **Include the total creation fee.** Send `~$1 USD × number of streams` worth of native token as `msg.value`. Since `batch()` is `payable` and each sub-call sees the same `msg.value` via `delegatecall`, the total fee covers all streams.
 
-**Note:** The EVM batch contract is not `payable` — creation fees cannot be included in batch transactions.
+### Approach
 
-### Batch Create Functions
+1. Encode each create call as calldata using `abi.encodeCall`.
+2. Pass the array of encoded calls to `lockup.batch{ value: totalFee }(calls)`.
 
-Each stream type has two batch variants (timestamps and durations):
+Each call can use any create function from [evm-lockup.md](evm-lockup.md) — you can mix LL, LD, and LT streams in the same batch.
 
-#### Linear (LL)
-
-```solidity
-function createWithDurationsLL(
-    ISablierLockup lockup,
-    IERC20 token,
-    BatchLockup.CreateWithDurationsLL[] calldata batch
-) external returns (uint256[] memory streamIds);
-
-function createWithTimestampsLL(
-    ISablierLockup lockup,
-    IERC20 token,
-    BatchLockup.CreateWithTimestampsLL[] calldata batch
-) external returns (uint256[] memory streamIds);
-```
-
-#### Dynamic (LD)
+### Example
 
 ```solidity
-function createWithDurationsLD(
-    ISablierLockup lockup,
-    IERC20 token,
-    BatchLockup.CreateWithDurationsLD[] calldata batch
-) external returns (uint256[] memory streamIds);
+// Create an LL and an LT stream in a single transaction
+bytes[] memory calls = new bytes[](2);
+calls[0] = abi.encodeCall(lockup.createWithDurationsLL, (llParams, unlockAmounts, durations));
+calls[1] = abi.encodeCall(lockup.createWithTimestampsLT, (ltParams, tranches));
 
-function createWithTimestampsLD(
-    ISablierLockup lockup,
-    IERC20 token,
-    BatchLockup.CreateWithTimestampsLD[] calldata batch
-) external returns (uint256[] memory streamIds);
+// Fee: ~$1 per stream in native token
+lockup.batch{ value: totalFee }(calls);
 ```
 
-#### Tranched (LT)
-
-```solidity
-function createWithDurationsLT(
-    ISablierLockup lockup,
-    IERC20 token,
-    BatchLockup.CreateWithDurationsLT[] calldata batch
-) external returns (uint256[] memory streamIds);
-
-function createWithTimestampsLT(
-    ISablierLockup lockup,
-    IERC20 token,
-    BatchLockup.CreateWithTimestampsLT[] calldata batch
-) external returns (uint256[] memory streamIds);
-```
-
-### Batch Struct Definitions
-
-Each batch element wraps the per-stream parameters from the single-stream create functions — see [evm-lockup.md](evm-lockup.md) for struct definitions. The `token` is passed as a top-level parameter to the batch function, not per-stream.
 
 ## Solana
 
