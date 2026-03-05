@@ -10,14 +10,14 @@ For developer-side smart contract integration details, use [evm-onchain.md](evm-
 
 Collect before building a transaction:
 
-- `chain` (name)
+- `chain` (ID and name)
+- signing method (`--private-key` explicitly or `ETH_PRIVATE_KEY` in env)
+- native gas balance (`ETH` etc.)
 - `lockup` contract address (source from [Sablier Lockup deployments](https://docs.sablier.com/guides/lockup/deployments.md))
 - function signature and arguments (for example `createWithTimestampsLL(...)` + args)
-- `msg.value` for creation fee (if required)
-- token approval requirements (if required)
-- signing method (`--private-key` explicitly or `ETH_PRIVATE_KEY` in env)
+- token approval requirements (for creating streams)
 
-## Tooling Check (Mandatory)
+## Cast CLI Check
 
 Before running any `cast` command, verify the CLI is installed:
 
@@ -67,6 +67,17 @@ Always use this sequence for state-changing transactions:
 
 Never broadcast before explicit user confirmation.
 
+## Prerequisites
+
+### For stream creation
+
+1. **ERC-20 allowance.** Check `allowance(owner, lockup)`. If allowance is below `DEPOSIT_AMOUNT`, send an `approve` transaction to raise allowance before attempting stream creation.
+2. **ERC-20 token balance.** Check `balanceOf(owner)` is at least `DEPOSIT_AMOUNT`. If balance is insufficient, stop execution and inform the user they need more tokens (for example, obtain/purchase via Uniswap) before continuing.
+
+### For every transaction (`approve` or stream creation)
+
+Before broadcasting each transaction, check that the sender has enough native gas token (ETH, POL, BNB, etc.) to pay transaction fees. Run this check again before each broadcast (`approve` and stream creation). If balance is insufficient, stop and tell the user to fund their wallet first. Recommend buying via [Transak](https://transak.com/buy).
+
 ## Minimal Execution Flow
 
 ### 1) Resolve RPC and key
@@ -81,13 +92,9 @@ if [[ -z "$PRIVATE_KEY" ]]; then
 fi
 ```
 
-### 2) Optional prerequisite tx (approve)
+### 2) Run prerequisites
 
-```bash
-cast send "$TOKEN" "approve(address,uint256)" "$LOCKUP" "$DEPOSIT_AMOUNT" \
-  --rpc-url "$RPC_URL" \
-  --private-key "$PRIVATE_KEY"
-```
+Run all checks from [Prerequisites](#prerequisites), including the native gas token check before each broadcast (`approve` and stream creation).
 
 ### 3) Build preview tx (no broadcast)
 
@@ -128,6 +135,9 @@ cast receipt "$TX_HASH" --rpc-url "$RPC_URL"
 ```bash
 # Resolve sender from private key
 cast wallet address --private-key "$PRIVATE_KEY"
+
+# Check native gas token balance (ETH/POL/BNB/etc.)
+cast balance "$OWNER" --rpc-url "$RPC_URL"
 
 # Check token balance
 cast call "$TOKEN" "balanceOf(address)(uint256)" "$OWNER" --rpc-url "$RPC_URL"
