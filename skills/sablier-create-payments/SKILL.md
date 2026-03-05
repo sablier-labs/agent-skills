@@ -1,15 +1,15 @@
 ---
-name: sablier-flow-creation
+name: sablier-create-payments
 description: This skill should be used when the user asks to "create a Sablier Flow stream", "create a payment stream", "create a payment stream with adjustable rate", "stream tokens without end date", "set up payroll streaming", "create an open-ended stream", "stream salary payments", "create a recurring payment stream", "create an onchain salary", or mentions Sablier Flow, open-ended streaming, adjustable-rate payments, or continuous payroll streaming.
 ---
 
-# Sablier Flow Stream Creation
+# Sablier Payment Stream Creation
 
 ## Overview
 
 Create open-ended token streams using the Sablier Flow protocol. Flow streams accrue debt at a configurable rate per second with no predefined end date. Anyone can deposit tokens into a stream at any time to keep it solvent — no upfront funding is required. Each stream mints an NFT to the recipient.
 
-This skill covers Flow stream **creation** only. For other Sablier products and skills:
+This skill covers payment stream **creation** only. For other Sablier products and skills:
 
 - Choosing the right product/stream type → `sablier-product-selection`
 - Protocol overview → `sablier-protocol`

@@ -15,7 +15,7 @@ This skill covers airdrop campaign **creation** only. For other Sablier products
 - Protocol overview → `sablier-protocol`
 - EVM contract deployment → `evm-deployment`
 - Lockup streams (vesting with fixed schedule) → `sablier-create-vesting`
-- Flow streams (open-ended payroll, adjustable rate) → `sablier-flow-creation`
+- Flow streams (open-ended payroll, adjustable rate) → `sablier-create-payments`
 
 **Supported chains:** 27+ EVM chains (Ethereum, Arbitrum, Optimism, Base, Polygon, etc.) and Solana (instant only).
 

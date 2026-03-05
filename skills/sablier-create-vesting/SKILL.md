@@ -14,7 +14,7 @@ This skill covers Lockup stream **creation** only. For other Sablier products an
 - Choosing the right product/stream type → `sablier-product-selection`
 - Protocol overview → `sablier-protocol`
 - EVM contract deployment → `evm-deployment`
-- Flow streams (open-ended payroll, adjustable rate) → `sablier-flow-creation`
+- Flow streams (open-ended payroll, adjustable rate) → `sablier-create-payments`
 - Merkle Airdrops (instant distribution to many recipients) → `sablier-create-airdrop`
 
 **Supported chains:** 27+ EVM chains (Ethereum, Arbitrum, Optimism, Base, Polygon, etc.) and Solana.

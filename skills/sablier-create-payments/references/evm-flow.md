@@ -1,4 +1,4 @@
-# EVM Flow Stream Creation
+# EVM Payment Stream Creation
 
 ## Contract
 
