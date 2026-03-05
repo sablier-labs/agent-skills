@@ -4,8 +4,6 @@
 
 Use this reference when the user wants the agent to execute EVM transactions on their behalf (for example, create a Lockup stream directly from the terminal).
 
-For developer-side smart contract integration details, use [evm-onchain.md](evm-onchain.md).
-
 ## Required Inputs
 
 Collect before building a transaction:
@@ -14,7 +12,7 @@ Collect before building a transaction:
 - signing method (`--private-key` explicitly or `ETH_PRIVATE_KEY` in env)
 - native gas balance (`ETH` etc.)
 - `lockup` contract address (source from [Sablier Lockup deployments](https://docs.sablier.com/guides/lockup/deployments.md))
-- function signature and arguments (for example `createWithTimestampsLL(...)` + args)
+- function signature and arguments (see [Function Signatures & Arguments](#function-signatures--arguments))
 - token approval requirements (for creating streams)
 
 ## Cast CLI Check
@@ -88,6 +86,131 @@ Always use this sequence for state-changing transactions:
 
 Never broadcast before explicit user confirmation.
 
+## Vesting Shapes
+
+This skill supports five vesting shapes. Each maps to specific Lockup contract functions and a `shape` string passed in the create call.
+
+| Shape | Contract Functions | `shape` String |
+| --- | --- | --- |
+| Linear | `createWithDurationsLL` / `createWithTimestampsLL` | `"linear"` |
+| Cliff | `createWithDurationsLL` / `createWithTimestampsLL` | `"cliff"` |
+| Unlock in Steps | `createWithDurationsLT` / `createWithTimestampsLT` | `"tranchedStepper"` |
+| Monthly Unlocks | `createWithDurationsLT` / `createWithTimestampsLT` | `"tranchedMonthly"` |
+| Timelock | `createWithDurationsLL` / `createWithTimestampsLL` | `"linearTimelock"` |
+
+### Variant Selection
+
+- **`Durations` variants** (`createWithDurationsLL`, `createWithDurationsLT`): Use when the user does **not** specify a specific start time. The stream starts immediately upon transaction confirmation.
+- **`Timestamps` variants** (`createWithTimestampsLL`, `createWithTimestampsLT`): Use when the user specifies a specific start time (e.g., "starting March 15" or "beginning at Unix timestamp 1710460800").
+
+### Default Shape Inference
+
+- If the vesting shape **cannot be inferred** from the user's instructions, default to **Linear**.
+- If the user mentions a **cliff** but no other shape, default to **Cliff**.
+- If the inferred shape is **not among the five listed above**, inform the user that this skill does not currently support that shape and suggest they reach out to request it as a feature.
+
+## Function Signatures & Arguments
+
+Refer to the ABI definitions in [lockup-abi.json](../assets/lockup-abi.json) for the exact tuple encoding of each function.
+
+### `createWithDurationsLL`
+
+Used for **Linear**, **Cliff**, and **Timelock** shapes when no specific start time is given.
+
+```
+createWithDurationsLL(
+  (address sender, address recipient, uint128 depositAmount, address token, bool cancelable, bool transferable, string shape),
+  (uint128 start, uint128 cliff),
+  (uint40 cliff, uint40 total)
+)
+```
+
+**Arguments:**
+
+1. **params** tuple — `(sender, recipient, depositAmount, token, cancelable, transferable, shape)`
+2. **unlockAmounts** tuple — `(start, cliff)` — amounts unlocked instantly at stream start and at cliff time
+3. **durations** tuple — `(cliff, total)` — durations in seconds
+
+**Shape-specific encoding:**
+
+| Shape | `unlockAmounts` | `durations` |
+| --- | --- | --- |
+| Linear | `(0, 0)` | `(0, totalDuration)` — no cliff |
+| Cliff | `(0, cliffUnlockAmount)` | `(cliffDuration, totalDuration)` |
+| Timelock | `(0, 0)` | `(0, lockDuration)` — entire amount unlocks at end |
+
+### `createWithTimestampsLL`
+
+Used for **Linear**, **Cliff**, and **Timelock** shapes when the user specifies a start time.
+
+```
+createWithTimestampsLL(
+  (address sender, address recipient, uint128 depositAmount, address token, bool cancelable, bool transferable, (uint40 start, uint40 end) timestamps, string shape),
+  (uint128 start, uint128 cliff),
+  uint40 cliffTime
+)
+```
+
+**Arguments:**
+
+1. **params** tuple — `(sender, recipient, depositAmount, token, cancelable, transferable, (startTimestamp, endTimestamp), shape)`
+2. **unlockAmounts** tuple — `(start, cliff)` — amounts unlocked instantly at stream start and at cliff time
+3. **cliffTime** — Unix timestamp for the cliff; set to `0` if no cliff
+
+**Shape-specific encoding:**
+
+| Shape | `unlockAmounts` | `cliffTime` |
+| --- | --- | --- |
+| Linear | `(0, 0)` | `0` |
+| Cliff | `(0, cliffUnlockAmount)` | cliff Unix timestamp |
+| Timelock | `(0, 0)` | `0` |
+
+### `createWithDurationsLT`
+
+Used for **Unlock in Steps** and **Monthly Unlocks** when no specific start time is given.
+
+```
+createWithDurationsLT(
+  (address sender, address recipient, uint128 depositAmount, address token, bool cancelable, bool transferable, string shape),
+  (uint128 amount, uint40 duration)[]
+)
+```
+
+**Arguments:**
+
+1. **params** tuple — `(sender, recipient, depositAmount, token, cancelable, transferable, shape)`
+2. **tranchesWithDuration** array — each element is `(amount, duration)` where `amount` is the token amount unlocked in that tranche and `duration` is the tranche length in seconds
+
+**Shape-specific encoding:**
+
+| Shape | Tranche Construction |
+| --- | --- |
+| Unlock in Steps | Equal amounts, equal durations (e.g., 4 tranches of 250 tokens every 90 days) |
+| Monthly Unlocks | Equal amounts, 30-day durations (use 2592000 seconds per tranche) |
+
+### `createWithTimestampsLT`
+
+Used for **Unlock in Steps** and **Monthly Unlocks** when the user specifies a start time.
+
+```
+createWithTimestampsLT(
+  (address sender, address recipient, uint128 depositAmount, address token, bool cancelable, bool transferable, (uint40 start, uint40 end) timestamps, string shape),
+  (uint128 amount, uint40 timestamp)[]
+)
+```
+
+**Arguments:**
+
+1. **params** tuple — `(sender, recipient, depositAmount, token, cancelable, transferable, (startTimestamp, endTimestamp), shape)`
+2. **tranches** array — each element is `(amount, timestamp)` where `amount` is the token amount unlocked and `timestamp` is the Unix timestamp at which it unlocks
+
+**Shape-specific encoding:**
+
+| Shape | Tranche Construction |
+| --- | --- |
+| Unlock in Steps | Equal amounts at equally spaced timestamps |
+| Monthly Unlocks | Equal amounts at monthly timestamps (add 30 days per tranche to start) |
+
 ## Prerequisites
 
 ### Stream creation fee (Lockup create calls)
@@ -106,17 +229,7 @@ For stream creation transactions, include a creation fee of approximately **$1 U
 
 ### For every transaction (`approve` or stream creation)
 
-Before broadcasting each transaction, check that the sender has enough native gas token (ETH, POL, BNB, etc.) to pay transaction fees. Run this check again before each broadcast (`approve` and stream creation). If balance is insufficient, stop and tell the user to fund their wallet first. Recommend buying via [Transak](https://transak.com/buy).
-
-## Shape Parameter
-
-Every create call requires a `shape` string for the Sablier UI/indexer. Consult [evm-onchain.md](evm-onchain.md) for the full list. Common values:
-
-| Stream Type | Common Shape Values |
-| --- | --- |
-| LL | `"linear"`, `"cliff"` |
-| LD | `"dynamicExponential"`, `"dynamicStepper"` |
-| LT | `"tranchedStepper"`, `"tranchedMonthly"` |
+Before broadcasting each transaction, check that the sender has enough native gas token (ETH/POL/BNB/etc.) to pay transaction fees. Run this check again before each broadcast (`approve` and stream creation). If balance is insufficient, stop and tell the user to fund their wallet first. Recommend buying via [Transak](https://transak.com/buy).
 
 ## Minimal Execution Flow
 
@@ -194,7 +307,7 @@ RECIPIENT="0x..."
 
 cast send "$LOCKUP" \
   "createWithDurationsLL((address,address,uint128,address,bool,bool,string),(uint128,uint128),(uint40,uint40))" \
-  "($SENDER,$RECIPIENT,1000000000,$TOKEN,true,true,linear)" \
+  "($SENDER,$RECIPIENT,1000000000,$TOKEN,true,true,cliff)" \
   "(0,0)" \
   "(7776000,31536000)" \
   --value "$MSG_VALUE" \
