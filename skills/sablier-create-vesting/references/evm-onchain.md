@@ -32,20 +32,11 @@ All EVM create functions rely on the same core stream metadata:
 
 Express `depositAmount` in the token's smallest unit.
 
-## Creation Fee
-
-Include a creation fee of approximately **$1 USD** worth of the chain's native token with each stream creation.
-
-- Send the fee as `msg.value` in the create transaction.
-- All create functions are `payable`.
-- For automation, convert USD to native token amount using a price source (for example, `coingecko-api`).
-
 ## Prerequisites
 
 Before calling any create function:
 
 1. **Approve the token transfer.** The Lockup contract pulls tokens from the caller. Call `token.approve(lockupAddress, depositAmount)` on the ERC-20 token contract first.
-2. **Include the creation fee.** Send approximately $1 USD worth of the native token as `msg.value` with the create transaction.
 
 ## Multi-Stream Creation (Single Transaction)
 
@@ -60,7 +51,6 @@ This allows creating multiple streams in one transaction, including mixed stream
 ### Batch Prerequisites
 
 1. **Approve tokens to the Lockup contract.** `batch()` executes on `SablierLockup` itself, so token transfers are still pulled by `SablierLockup` from the caller.
-2. **Include total creation fee.** Sum the per-stream creation fee and send it as `msg.value` to `batch()`.
 
 ### Batch Approach
 

@@ -36,12 +36,33 @@ Use this hardcoded map first:
 
 | Chain | Chain ID | RPC URL |
 | --- | --- | --- |
-| Ethereum | `1` | `https://ethereum-rpc.publicnode.com` |
+| Abstract | `2741` | `https://api.mainnet.abs.xyz` |
+| Arbitrum | `42161` | `https://arb1.arbitrum.io/rpc` |
+| Avalanche | `43114` | `https://api.avax.network/ext/bc/C/rpc` |
 | Base | `8453` | `https://mainnet.base.org` |
-| Arbitrum One | `42161` | `https://arb1.arbitrum.io/rpc` |
-| Optimism | `10` | `https://mainnet.optimism.io` |
+| Berachain | `80094` | `https://rpc.berachain.com` |
+| Blast | `81457` | `https://rpc.blast.io` |
+| BNB Chain | `56` | `https://bsc-dataseed1.bnbchain.org` |
+| Chiliz | `88888` | `https://rpc.chiliz.com` |
+| Core Dao | `1116` | `https://rpc.coredao.org` |
+| Denergy | `369369` | `https://rpc.d.energy` |
+| Ethereum | `1` | `https://ethereum-rpc.publicnode.com` |
+| Gnosis | `100` | `https://rpc.gnosischain.com` |
+| HyperEVM | `999` | `https://rpc.hyperliquid.xyz/evm` |
+| Lightlink | `1890` | `https://replicator.phoenix.lightlink.io/rpc/v1` |
+| Linea Mainnet | `59144` | `https://rpc.linea.build` |
+| Mode | `34443` | `https://mainnet.mode.network` |
+| Monad | `143` | `https://rpc.monad.xyz` |
+| Morph | `2818` | `https://rpc.morphl2.io` |
+| OP Mainnet | `10` | `https://mainnet.optimism.io` |
 | Polygon | `137` | `https://polygon-bor-rpc.publicnode.com` |
-| BNB Chain | `56` | `https://bsc-dataseed.bnbchain.org` |
+| Scroll | `534352` | `https://rpc.scroll.io` |
+| Sei Network | `1329` | `https://evm-rpc.sei-apis.com` |
+| Sonic | `146` | `https://rpc.soniclabs.com` |
+| Superseed | `5330` | `https://mainnet.superseed.xyz` |
+| Unichain | `130` | `https://mainnet.unichain.org` |
+| XDC | `50` | `https://rpc.xinfin.network` |
+| ZKsync Era | `324` | `https://mainnet.era.zksync.io` |
 | Sepolia | `11155111` | `https://ethereum-sepolia-rpc.publicnode.com` |
 
 If the requested chain is not listed, stop and ask the user to provide an RPC URL.
@@ -69,6 +90,15 @@ Never broadcast before explicit user confirmation.
 
 ## Prerequisites
 
+### Stream creation fee (Lockup create calls)
+
+For stream creation transactions, include a creation fee of approximately **$1 USD** worth of the chain's native token per stream.
+
+- Single-stream create call: set `MSG_VALUE` to one-stream fee.
+- Batch create call: set `MSG_VALUE = perStreamFee * numberOfStreams`.
+- Convert the USD-denominated fee into native token units before building or broadcasting the transaction by browsing the web for the latest native token price.
+- Before sending, verify the wallet has enough native token for both `MSG_VALUE` and gas.
+
 ### For stream creation
 
 1. **ERC-20 allowance.** Check `allowance(owner, lockup)`. If allowance is below `DEPOSIT_AMOUNT`, send an `approve` transaction to raise allowance before attempting stream creation.
@@ -94,9 +124,11 @@ fi
 
 ### 2) Run prerequisites
 
-Run all checks from [Prerequisites](#prerequisites), including the native gas token check before each broadcast (`approve` and stream creation).
+Run all checks from [Prerequisites](#prerequisites), compute the stream creation `MSG_VALUE` (single create or batch), and run the native gas token check before each broadcast (`approve` and stream creation).
 
 ### 3) Build preview tx (no broadcast)
+
+For Lockup stream creation (`create*` or `batch()` with create calls), pass the computed creation-fee amount in `MSG_VALUE`.
 
 ```bash
 RAW_TX=$(cast mktx "$LOCKUP" "$FUNCTION_SIG" $FUNCTION_ARGS \
