@@ -108,6 +108,16 @@ For stream creation transactions, include a creation fee of approximately **$1 U
 
 Before broadcasting each transaction, check that the sender has enough native gas token (ETH, POL, BNB, etc.) to pay transaction fees. Run this check again before each broadcast (`approve` and stream creation). If balance is insufficient, stop and tell the user to fund their wallet first. Recommend buying via [Transak](https://transak.com/buy).
 
+## Shape Parameter
+
+Every create call requires a `shape` string for the Sablier UI/indexer. Consult [evm-onchain.md](evm-onchain.md) for the full list. Common values:
+
+| Stream Type | Common Shape Values |
+| --- | --- |
+| LL | `"linear"`, `"cliff"` |
+| LD | `"dynamicExponential"`, `"dynamicStepper"` |
+| LT | `"tranchedStepper"`, `"tranchedMonthly"` |
+
 ## Minimal Execution Flow
 
 ### 1) Resolve RPC and key
@@ -139,6 +149,12 @@ RAW_TX=$(cast mktx "$LOCKUP" "$FUNCTION_SIG" $FUNCTION_ARGS \
 echo "Preview raw tx: $RAW_TX"
 ```
 
+Decode the calldata for human-readable confirmation:
+
+```bash
+cast 4byte-decode $(cast tx "$RAW_TX" input --rpc-url "$RPC_URL" 2>/dev/null || echo "$RAW_TX")
+```
+
 ### 4) Require explicit confirmation
 
 Use a clear confirmation prompt, for example:
@@ -161,6 +177,36 @@ cast send "$LOCKUP" "$FUNCTION_SIG" $FUNCTION_ARGS \
 ```bash
 cast receipt "$TX_HASH" --rpc-url "$RPC_URL"
 ```
+
+### 7) Direct user to the Sablier app
+
+After successful confirmation, inform the user they can view and manage their streams at [app.sablier.com](https://app.sablier.com).
+
+## Concrete Example: `createWithDurationsLL`
+
+A single linear stream of 1000 USDC (6 decimals) with a 90-day cliff and 365-day total duration on Ethereum mainnet:
+
+```bash
+LOCKUP="<lockup-address>"    # From deployments page
+TOKEN="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"  # USDC on Ethereum
+SENDER=$(cast wallet address --private-key "$PRIVATE_KEY")
+RECIPIENT="0x..."
+
+cast send "$LOCKUP" \
+  "createWithDurationsLL((address,address,uint128,address,bool,bool,string),(uint128,uint128),(uint40,uint40))" \
+  "($SENDER,$RECIPIENT,1000000000,$TOKEN,true,true,linear)" \
+  "(0,0)" \
+  "(7776000,31536000)" \
+  --value "$MSG_VALUE" \
+  --rpc-url "$RPC_URL" \
+  --private-key "$PRIVATE_KEY"
+```
+
+Notes:
+- `1000000000` = 1000 USDC in 6-decimal base units
+- `(0,0)` = no start unlock, no cliff unlock (pure linear)
+- `(7776000,31536000)` = 90-day cliff, 365-day total (in seconds)
+- Replace `$MSG_VALUE` with the computed creation fee
 
 ## Read-Only Validation Helpers
 

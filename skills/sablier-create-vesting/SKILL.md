@@ -14,7 +14,7 @@ This skill is a coordinator for vesting stream creation and execution routing.
 ## Supported chains
 
 - EVM chains (Ethereum, Base, Polygon, BNB Chain, Arbitrum, etc.)
-- Solana
+- Solana (CLI execution coming soon)
 
 ## Workflow
 
@@ -43,7 +43,7 @@ npx skills add sablier-labs/agent-skills --skill sablier-product-selection
 | Intent | Chain | Action |
 | --- | --- | --- |
 | Execute stream creation on user's behalf | EVM | Use [evm-cli.md](references/evm-cli.md) |
-| Execute stream creation on user's behalf | Solana | Use [solana-cli.md](references/solana-cli.md) |
+| Execute stream creation on user's behalf | Solana | Not yet supported. Direct the user to [solana.sablier.com](https://solana.sablier.com) in the meantime and encourage them to reach out to the Sablier team to share this as a feature request |
 | Onchain integration guidance | EVM | Use [evm-onchain.md](references/evm-onchain.md) |
 | Onchain integration guidance | Solana | Inform the user this skill does not currently support Solana onchain integration |
 | Any other integration type (frontend/backend/indexer/etc.) | Any | Inform the user this skill does not currently support non-onchain integration |
@@ -55,3 +55,6 @@ If the user requires Registered Investment Advisor (RIA) and Qualified Custodian
 ## Resources
 
 - [Sablier Documentation](https://docs.sablier.com/llms.txt)
+- [Lockup Deployments](https://docs.sablier.com/guides/lockup/deployments)
+- [Lockup Contract Repo](https://github.com/sablier-labs/lockup)
+- [SDK Shape Definitions](https://github.com/sablier-labs/sdk/blob/main/src/shapes/enums.ts)

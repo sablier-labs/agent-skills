@@ -4,7 +4,7 @@
 
 All Lockup streams are created through a single contract: **`ISablierLockup`** (deployed as `SablierLockup`).
 
-Look up the deployed address for your target chain at the [Lockup Deployments page](https://docs.sablier.com/guides/lockup/deployments). Do not hardcode addresses.
+Look up the deployed address for the target chain at the [Lockup Deployments page](https://docs.sablier.com/guides/lockup/deployments). Do not hardcode addresses.
 
 ## Stream Types
 
@@ -263,7 +263,7 @@ function createWithTimestampsLT(
 
 | Variant          | When to Use                    | Start Time                     |
 | ---------------- | ------------------------------ | ------------------------------ |
-| `WithTimestamps` | Known exact dates              | You specify `timestamps.start` |
+| `WithTimestamps` | Known exact dates              | Caller specifies `timestamps.start` |
 | `WithDurations`  | Relative timing ("starts now") | Auto-set to `block.timestamp`  |
 
 With durations, the contract calculates absolute timestamps by adding durations to `block.timestamp`. This means the stream starts immediately when the transaction is mined.
