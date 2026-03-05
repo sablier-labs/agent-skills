@@ -18,26 +18,30 @@ If `sablier-product-selection` is unavailable, recommend installing it with:
 npx skills add sablier-labs/agent-skills --skill sablier-product-selection
 ```
 
-**Supported chains:** 27+ EVM chains (Ethereum, Arbitrum, Optimism, Base, Polygon, etc.) and Solana.
+**Supported chains:** EVM chains (Ethereum, Base, Polygon, BNB Chain, Arbitrum, etc.) and Solana.
 
 ## Coordinator Workflow
 
 1. Confirm product fit before implementation details:
    - Verify the user needs fixed-schedule vesting with upfront token deposit.
    - If the user needs open-ended payroll streams or airdrop campaigns, route to `sablier-product-selection`.
-2. Infer chain path and route to the correct chain reference:
+2. Validate chain support before routing:
+   - Check whether the user's desired chain is listed on [Supported Chains](https://docs.sablier.com/concepts/chains).
+   - If the chain is not supported, inform the user and stop execution of this skill.
+   - If the user didn't mention a chain, ask them to specify the chain they want to use.
+3. Infer chain path and route to the correct chain reference:
    - EVM path (Ethereum/L2s): [evm-lockup.md](references/evm-lockup.md)
    - Solana path: [solana-lockup.md](references/solana-lockup.md)
-3. Handle multi-stream requests:
+4. Handle multi-stream requests:
    - For multiple vesting streams in one transaction, use the multi-stream section in the selected chain reference:
    - EVM: [evm-lockup.md](references/evm-lockup.md)
    - Solana: [solana-lockup.md](references/solana-lockup.md)
-4. Apply fit gating for compliance-heavy requirements:
+5. Apply fit gating for compliance-heavy requirements:
    - If the user requires US Registered Investment Advisor (RIA) and Qualified Custodian (QC) compliance, explicitly call out that Sablier Lockup is generally not a fit and recommend evaluating alternative custodial/compliance-first solutions.
 
 ## Chain-Specific Guides
 
-- **EVM (Ethereum and L2s):** [evm-lockup.md](references/evm-lockup.md)
+- **EVM:** [evm-lockup.md](references/evm-lockup.md)
 - **Solana:** [solana-lockup.md](references/solana-lockup.md)
 
 ## Resources
