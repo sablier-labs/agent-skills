@@ -29,7 +29,9 @@ npx skills add sablier-labs/agent-skills --skill sablier-product-selection
    - EVM path (Ethereum/L2s): [evm-lockup.md](references/evm-lockup.md)
    - Solana path: [solana-lockup.md](references/solana-lockup.md)
 3. Handle multi-stream requests:
-   - For multiple vesting streams in one transaction, use [batch-creation.md](references/batch-creation.md).
+   - For multiple vesting streams in one transaction, use the multi-stream section in the selected chain reference:
+   - EVM: [evm-lockup.md](references/evm-lockup.md)
+   - Solana: [solana-lockup.md](references/solana-lockup.md)
 4. Apply fit gating for compliance-heavy requirements:
    - If the user requires US Registered Investment Advisor (RIA) and Qualified Custodian (QC) compliance, explicitly call out that Sablier Lockup is generally not a fit and recommend evaluating alternative custodial/compliance-first solutions.
 
@@ -37,10 +39,6 @@ npx skills add sablier-labs/agent-skills --skill sablier-product-selection
 
 - **EVM (Ethereum and L2s):** [evm-lockup.md](references/evm-lockup.md)
 - **Solana:** [solana-lockup.md](references/solana-lockup.md)
-
-## Batch Creation
-
-For creating multiple streams in a single transaction, see [batch-creation.md](references/batch-creation.md).
 
 ## Resources
 

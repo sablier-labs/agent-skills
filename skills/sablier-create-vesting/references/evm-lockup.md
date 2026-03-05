@@ -47,6 +47,37 @@ Before calling any create function:
 1. **Approve the token transfer.** The Lockup contract pulls tokens from the caller. Call `token.approve(lockupAddress, depositAmount)` on the ERC-20 token contract first.
 2. **Include the creation fee.** Send approximately $1 USD worth of the native token as `msg.value` with the create transaction.
 
+## Multi-Stream Creation (Single Transaction)
+
+`SablierLockup` inherits [`Batch`](https://github.com/sablier-labs/evm-utils/blob/main/src/Batch.sol), which exposes a `payable` `batch()` function that executes an array of encoded calls via `delegatecall`.
+
+```solidity
+function batch(bytes[] calldata calls) external payable returns (bytes[] memory results);
+```
+
+This allows creating multiple streams in one transaction, including mixed stream types (LL, LD, LT).
+
+### Batch Prerequisites
+
+1. **Approve tokens to the Lockup contract.** `batch()` executes on `SablierLockup` itself, so token transfers are still pulled by `SablierLockup` from the caller.
+2. **Include total creation fee.** Sum the per-stream creation fee and send it as `msg.value` to `batch()`.
+
+### Batch Approach
+
+1. Encode each create call with `abi.encodeCall`.
+2. Pass all encoded calls to `lockup.batch{ value: totalFee }(calls)`.
+
+Each encoded call can use any create function in this guide (`createWithDurationsLL`, `createWithTimestampsLD`, `createWithDurationsLT`, etc.).
+
+```solidity
+// Create an LL and an LT stream in one transaction
+bytes[] memory calls = new bytes[](2);
+calls[0] = abi.encodeCall(lockup.createWithDurationsLL, (llParams, unlockAmounts, durations));
+calls[1] = abi.encodeCall(lockup.createWithTimestampsLT, (ltParams, tranches));
+
+lockup.batch{ value: totalFee }(calls);
+```
+
 ## Shared Structs
 
 ### Lockup.CreateWithDurations

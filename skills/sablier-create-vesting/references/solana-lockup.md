@@ -49,6 +49,21 @@ Before calling any create instruction:
 2. **Include the creation fee.** Send approximately $1 USD worth of SOL to the Sablier treasury in the same transaction.
 3. **Ensure sufficient SOL for rent.** The funder pays rent-exemption costs for the new PDAs (`stream_nft`, `stream_data`, `stream_data_ata`). This is in addition to the deposit amount and creation fee.
 
+## Multi-Stream Creation (Single Transaction)
+
+Solana has no separate batch program for Lockup. To create multiple streams in one transaction, include multiple create instructions.
+
+### Approach
+
+1. Build one create instruction per stream (`create_with_timestamps_ll`, `create_with_durations_lt`, etc.).
+2. Use a unique `salt` (`u128`) per stream so each stream derives a unique PDA.
+3. Add one `SystemProgram.transfer` fee instruction per stream.
+4. Submit all instructions in a single transaction.
+
+### Limits
+
+Solana transactions are capped at **1232 bytes**. Streams per transaction depend on instruction size, which varies by stream type and tranche count. Start with small batches and scale up based on actual serialized transaction size.
+
 ## Required Accounts (All Instructions)
 
 Every create instruction requires the same set of accounts:
