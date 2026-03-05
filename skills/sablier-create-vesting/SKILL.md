@@ -1,6 +1,6 @@
 ---
 name: sablier-create-vesting
-description: This skill should be used when the user asks to "create a Sablier stream", "set up token vesting", "create a lockup stream", "stream tokens with Sablier", "create linear vesting", "create tranched vesting", "create a cliff vesting schedule", "set up employee vesting", "create a payment stream", or mentions Sablier Lockup stream creation, vesting schedules, or token streaming setup.
+description: This skill should be used when the user asks to "create a Sablier vesting stream", "set up token vesting", "create a lockup stream", "create linear vesting", "create tranched vesting", "create a dynamic stream", "create a cliff vesting schedule", "set up employee vesting", "create an LL stream", "create an LT stream", "create an LD stream", or mentions Sablier Lockup stream creation, vesting schedules, or segment-based streaming.
 ---
 
 # Sablier Lockup Stream Creation
@@ -14,7 +14,7 @@ This skill covers Lockup stream **creation** only. For other Sablier products an
 - Choosing the right product/stream type → `sablier-product-selection`
 - Protocol overview → `sablier-protocol`
 - EVM contract deployment → `evm-deployment`
-- Flow streams (open-ended payroll, adjustable rate) → `sablier-flow-creation` (coming soon)
+- Flow streams (open-ended payroll, adjustable rate) → `sablier-create-payments`
 - Merkle Airdrops (instant distribution to many recipients) → `sablier-create-airdrop`
 
 **Supported chains:** 27+ EVM chains (Ethereum, Arbitrum, Optimism, Base, Polygon, etc.) and Solana.
@@ -45,6 +45,8 @@ All stream types share these base parameters:
 | transferable   | `bool`    | N/A             | Whether the stream NFT is transferable (EVM only)     |
 
 **Important:** The deposit amount must be expressed in the token's smallest unit (e.g., for a token with 18 decimals, 1.0 token = `1000000000000000000`).
+
+**Supported tokens for streaming:** ERC-20 on EVM, SPL and Token-2022 on Solana. Native tokens (ETH, SOL, etc.) cannot be streamed.
 
 ## Creation Fee
 

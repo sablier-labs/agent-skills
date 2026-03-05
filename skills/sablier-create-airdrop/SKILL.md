@@ -1,13 +1,13 @@
 ---
 name: sablier-create-airdrop
-description: This skill should be used when the user asks to "create a Sablier airdrop", "set up a token airdrop", "distribute tokens to many recipients", "create a Merkle airdrop", "airdrop tokens with vesting", "create an airstream", "set up a claimable airdrop", or mentions Sablier Merkle campaigns, token airdrops, or Merkle tree distribution.
+description: This skill should be used when the user asks to "create a Sablier airdrop", "set up a token airdrop", "distribute tokens to many recipients", "create a Merkle airdrop", "airdrop tokens with vesting", "create an airstream", "set up a claimable airdrop", "create a token claim campaign", or mentions Sablier Merkle campaigns, token airdrops, or Merkle tree distribution.
 ---
 
 # Sablier Merkle Airdrop Creation
 
 ## Overview
 
-Create token airdrops using the Sablier Merkle system. A campaign creator deploys a campaign contract (EVM) or creates a campaign PDA (Solana) storing a Merkle root, then funds it with tokens. Recipients claim individually using Merkle proofs, paying their own gas.
+Create token airdrops using the Sablier Merkle system. A campaign creator deploys a campaign contract (EVM) or creates a campaign PDA (Solana) storing a Merkle root. Anyone can then fund the campaign by transferring tokens to it. Recipients claim individually using Merkle proofs, paying their own gas.
 
 This skill covers airdrop campaign **creation** only. For other Sablier products and skills:
 
@@ -15,7 +15,7 @@ This skill covers airdrop campaign **creation** only. For other Sablier products
 - Protocol overview → `sablier-protocol`
 - EVM contract deployment → `evm-deployment`
 - Lockup streams (vesting with fixed schedule) → `sablier-create-vesting`
-- Flow streams (open-ended payroll, adjustable rate) → `sablier-flow-creation` (coming soon)
+- Flow streams (open-ended payroll, adjustable rate) → `sablier-create-payments`
 
 **Supported chains:** 27+ EVM chains (Ethereum, Arbitrum, Optimism, Base, Polygon, etc.) and Solana (instant only).
 
@@ -86,6 +86,8 @@ All campaign types share these base parameters:
 **`aggregateAmount` note:** This value is not enforced onchain — the Merkle tree leaf amounts are what enforce correctness. If the campaign is funded with less than the true total, later claims will fail.
 
 **Important:** Token amounts must be in the token's smallest unit (e.g., for 18 decimals, 1.0 token = `1000000000000000000`).
+
+**Supported tokens for distribution:** ERC-20 on EVM, SPL and Token-2022 on Solana. Native tokens (ETH, SOL, etc.) cannot be airdropped.
 
 **Admin role:** On EVM, the `initialAdmin` can be a different address from the campaign creator — this is the address authorized to clawback unclaimed tokens. On Solana, there is no separate admin role; the campaign creator is always the admin.
 
