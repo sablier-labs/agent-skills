@@ -1,6 +1,6 @@
 ---
 name: sablier-create-vesting
-description: This skill should be used when the user asks to create onchain token vesting or tokens vesting streams on Ethereum, EVM chains, or Solana, set up ERC-20 or BEP-20 vesting schedules, create crypto token vesting with cliffs or tranches, stream tokens via Sablier Lockup, or build blockchain vesting workflows for teams, investors, contributors, or treasury distributions.
+description: This skill should be used when the user asks to create onchain token vesting or vesting streams with Sablier Lockup, run stream-creation transactions on Ethereum/EVM/Solana on their behalf, or request EVM onchain integration guidance for Lockup vesting.
 ---
 
 # Sablier Lockup Stream Creation
@@ -9,10 +9,9 @@ description: This skill should be used when the user asks to create onchain toke
 
 Create fixed-schedule token vesting streams using the Sablier Lockup protocol. Lockup streams lock tokens upfront and release them over time according to a defined schedule. Each stream mints an NFT to the recipient.
 
-This skill is a coordinator for Lockup stream **creation** only.
+This skill is a coordinator for Lockup stream creation and execution routing.
 
-If the user wishes to create a non-vesting stream or launch an airdrop campaign, consult `sablier-product-selection`.
-If `sablier-product-selection` is unavailable, recommend installing it with:
+If the user wishes to create a non-vesting stream or launch an airdrop campaign, consult `sablier-product-selection`. If this skill is unavailable, recommend installing it with:
 
 ```bash
 npx skills add sablier-labs/agent-skills --skill sablier-product-selection
@@ -22,27 +21,41 @@ npx skills add sablier-labs/agent-skills --skill sablier-product-selection
 
 ## Coordinator Workflow
 
-1. Confirm product fit before implementation details:
-   - Verify the user needs fixed-schedule vesting with upfront token deposit.
-   - If the user needs open-ended payroll streams or airdrop campaigns, route to `sablier-product-selection`.
-2. Validate chain support before routing:
-   - Check whether the user's desired chain is listed on [Supported Chains](https://docs.sablier.com/concepts/chains).
-   - If the chain is not supported, inform the user and stop execution of this skill.
-   - If the user didn't mention a chain, ask them to specify the chain they want to use.
-3. Infer chain path and route to the correct chain reference:
-   - EVM path (Ethereum/L2s): [evm-lockup.md](references/evm-lockup.md)
-   - Solana path: [solana-lockup.md](references/solana-lockup.md)
-4. Handle multi-stream requests:
-   - For multiple vesting streams in one transaction, use the multi-stream section in the selected chain reference:
-   - EVM: [evm-lockup.md](references/evm-lockup.md)
-   - Solana: [solana-lockup.md](references/solana-lockup.md)
-5. Apply fit gating for compliance-heavy requirements:
-   - If the user requires US Registered Investment Advisor (RIA) and Qualified Custodian (QC) compliance, explicitly call out that Sablier Lockup is generally not a fit and recommend evaluating alternative custodial/compliance-first solutions.
+### 1. Confirm product fit before implementation details
 
-## Chain-Specific Guides
+1. Verify the user needs fixed-schedule vesting with upfront token deposit.
+2. If the user needs open-ended payroll streams or airdrop campaigns, route to `sablier-product-selection`.
 
-- **EVM:** [evm-lockup.md](references/evm-lockup.md)
-- **Solana:** [solana-lockup.md](references/solana-lockup.md)
+### 2. Infer intent before selecting references
+
+1. **Execution intent:** user wants the agent to create a stream on their behalf (run CLI transactions).
+2. **Integration intent:** user wants developer integration guidance.
+
+### 3. Validate chain support before routing
+
+1. Check whether the user's desired chain is listed on [Supported Chains](https://docs.sablier.com/concepts/chains).
+2. If the chain is not supported, inform the user and stop execution of this skill.
+3. If the user did not mention a chain, ask them to specify the chain.
+
+### 4. Route by intent and chain
+
+| Intent | Chain | Action |
+| --- | --- | --- |
+| Execute stream creation on user's behalf | EVM | Use [evm-cli.md](references/evm-cli.md) |
+| Execute stream creation on user's behalf | Solana | Use [solana-cli.md](references/solana-cli.md) |
+| Onchain integration guidance | EVM | Use [evm-onchain.md](references/evm-onchain.md) |
+| Onchain integration guidance | Solana | Inform the user this skill does not currently support Solana onchain integration |
+| Any other integration type (frontend/backend/indexer/etc.) | Any | Inform the user this skill does not currently support non-onchain integration |
+
+### 5. Handle multi-stream requests using the selected supported path
+
+1. EVM execution: use [evm-cli.md](references/evm-cli.md)
+2. Solana execution: use [solana-cli.md](references/solana-cli.md)
+3. EVM onchain integration: use [evm-onchain.md](references/evm-onchain.md)
+
+### 6. Apply fit gating for compliance-heavy requirements
+
+1. If the user requires US Registered Investment Advisor (RIA) and Qualified Custodian (QC) compliance, explicitly call out that Sablier Lockup is generally not a fit and recommend evaluating alternative custodial/compliance-first solutions.
 
 ## Resources
 
