@@ -111,7 +111,7 @@ This skill supports five vesting shapes. Each maps to specific Lockup contract f
 
 ## Function Signatures & Arguments
 
-Refer to the ABI definitions in [lockup-abi.json](../assets/lockup-abi.json) for the exact tuple encoding of each function.
+Refer to the ABI definitions in [lockup-v3.0-abi.json](../assets/lockup-v3.0-abi.json) for the exact tuple encoding of each function.
 
 ### `createWithDurationsLL`
 
