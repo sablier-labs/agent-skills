@@ -6,12 +6,46 @@ All Lockup streams are created through a single contract: **`ISablierLockup`** (
 
 Look up the deployed address for your target chain at the [Lockup Deployments page](https://docs.sablier.com/guides/lockup/deployments). Do not hardcode addresses.
 
+## Stream Types
+
+EVM Lockup supports three stream shapes:
+
+| Shape    | Code | When to Use                                                                    |
+| -------- | ---- | ------------------------------------------------------------------------------ |
+| Linear   | LL   | Continuous vesting with optional start unlock and optional cliff               |
+| Dynamic  | LD   | Custom unlock curves (exponential/step-like) via segments with per-segment exponent |
+| Tranched | LT   | Discrete unlock events at fixed dates (monthly, quarterly, milestone-based)    |
+
+## Common Parameters
+
+All EVM create functions rely on the same core stream metadata:
+
+| Parameter       | Type      | Description                                               |
+| --------------- | --------- | --------------------------------------------------------- |
+| `sender`        | `address` | Cancel/renounce authority over the stream                 |
+| `recipient`     | `address` | Receives the stream NFT and unlocked tokens               |
+| `depositAmount` | `uint128` | Total token amount locked upfront (token base units)      |
+| `token`         | `IERC20`  | ERC-20 token contract                                     |
+| `cancelable`    | `bool`    | Whether sender can cancel the stream                      |
+| `transferable`  | `bool`    | Whether the stream NFT can be transferred                 |
+| `shape`         | `string`  | UI/indexer display label used by Sablier integrations     |
+
+Express `depositAmount` in the token's smallest unit.
+
+## Creation Fee
+
+Include a creation fee of approximately **$1 USD** worth of the chain's native token with each stream creation.
+
+- Send the fee as `msg.value` in the create transaction.
+- All create functions are `payable`.
+- For automation, convert USD to native token amount using a price source (for example, `coingecko-api`).
+
 ## Prerequisites
 
 Before calling any create function:
 
 1. **Approve the token transfer.** The Lockup contract pulls tokens from the caller. Call `token.approve(lockupAddress, depositAmount)` on the ERC-20 token contract first.
-2. **Include the creation fee.** Send approximately $1 USD worth of the native token as `msg.value` with the create transaction. See the main SKILL.md for details.
+2. **Include the creation fee.** Send approximately $1 USD worth of the native token as `msg.value` with the create transaction.
 
 ## Shared Structs
 
@@ -204,7 +238,7 @@ function createWithTimestampsLT(
 - Sum of all tranche amounts = `depositAmount`
 - All tranche amounts > 0
 
-## Timestamps vs. Durations
+## Timestamps vs. Durations (EVM)
 
 | Variant          | When to Use                    | Start Time                     |
 | ---------------- | ------------------------------ | ------------------------------ |

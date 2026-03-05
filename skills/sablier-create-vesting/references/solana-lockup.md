@@ -6,12 +6,47 @@ The Sablier Lockup program on Solana supports Linear (LL) and Tranched (LT) stre
 
 Look up the deployed program ID at the [Solana Deployments page](https://docs.sablier.com/solana/deployment-addresses). Do not hardcode the address.
 
+## Stream Types
+
+Solana Lockup supports the following stream shapes:
+
+| Shape    | Code | When to Use                                                                 |
+| -------- | ---- | --------------------------------------------------------------------------- |
+| Linear   | LL   | Continuous vesting with optional start unlock and optional cliff            |
+| Tranched | LT   | Discrete unlocks for milestone/monthly/quarterly vesting                    |
+
+Dynamic (LD) streams are not currently supported on Solana.
+
+## Common Parameters
+
+All Solana create instructions rely on a shared set of core inputs:
+
+| Parameter           | Type    | Description                                                                 |
+| ------------------- | ------- | --------------------------------------------------------------------------- |
+| `salt`              | `u128`  | Unique nonce used for stream PDA derivation                                |
+| `deposit_amount`    | `u64`   | Total tokens locked in base units (LL)                                     |
+| `sender`            | `Pubkey`| Stream authority for cancellation rights                                   |
+| `recipient`         | `Pubkey`| Recipient of stream NFT and unlocked tokens                                |
+| `is_cancelable`     | `bool`  | Whether sender can cancel the stream                                       |
+| `deposit_token_mint`| `Pubkey`| SPL mint (token or token-2022) used for vesting                            |
+| `funder`/`funder_ata` | `Pubkey` accounts | Funding authority and source token account                     |
+
+For LT streams, deposit is derived from tranche amounts instead of a direct `deposit_amount` parameter.
+
+## Creation Fee
+
+Include a creation fee of approximately **$1 USD** worth of SOL per stream creation.
+
+- Add a `SystemProgram.transfer` instruction in the same transaction as the create instruction.
+- Derive the Sablier treasury PDA using `findProgramAddress([Buffer.from("treasury")], lockupProgramId)`.
+- Use the program ID from [Solana Deployment Addresses](https://docs.sablier.com/solana/deployment-addresses) when deriving treasury.
+
 ## Prerequisites
 
 Before calling any create instruction:
 
 1. **Fund the funder's ATA.** The funder must have an Associated Token Account (ATA) for the deposit token with sufficient balance.
-2. **Include the creation fee.** Send approximately $1 USD worth of SOL to the Sablier treasury in the same transaction. See the main SKILL.md for details on treasury address verification.
+2. **Include the creation fee.** Send approximately $1 USD worth of SOL to the Sablier treasury in the same transaction.
 3. **Ensure sufficient SOL for rent.** The funder pays rent-exemption costs for the new PDAs (`stream_nft`, `stream_data`, `stream_data_ata`). This is in addition to the deposit amount and creation fee.
 
 ## Required Accounts (All Instructions)
@@ -168,3 +203,12 @@ streamed = sum of all tranche.amount where tranche.timestamp <= current_time
 ```
 
 Tokens unlock in discrete steps — nothing streams between tranches.
+
+## Timestamps vs. Durations (Solana)
+
+| Variant                  | When to Use                    | Start Time                                   |
+| ------------------------ | ------------------------------ | -------------------------------------------- |
+| `create_with_timestamps` | Known calendar dates           | Supplied as explicit Unix timestamps         |
+| `create_with_durations`  | Relative timing from now       | Calculated from current onchain clock        |
+
+Use timestamps when vesting must align to specific dates. Use durations when vesting should begin at transaction execution time.
