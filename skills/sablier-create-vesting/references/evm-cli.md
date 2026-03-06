@@ -1,22 +1,12 @@
 # EVM CLI Stream Execution
 
-## Purpose
+## Overview
 
-Use this reference when the user wants the agent to execute EVM transactions on their behalf (for example, create a Lockup stream directly from the terminal).
+Use this reference when the user wants the agent to execute EVM transactions on their behalf, such as creating Sablier Lockup streams directly from the terminal. Start with the intake checklist to choose the right mode and entrypoint, run the preflight checks before building any transaction, and only broadcast after explicit user confirmation.
 
-## Required Inputs
+## Execution Guardrails
 
-Collect before building a transaction:
-
-- `chain` (ID and name)
-- signing method (`--private-key` explicitly or `ETH_PRIVATE_KEY` in env)
-- native gas balance (`ETH` etc.)
-- `lockup` contract address (from [Supported Chains](#supported-chains) or [Sablier Lockup deployments](https://docs.sablier.com/guides/lockup/deployments))
-- function signature and arguments (see [Function Signatures & Arguments](#function-signatures--arguments))
-- token approval requirements (for creating streams)
-- number of streams and recipients (single or batch — see [Single vs. Batch Inference Rule](#single-vs-batch-inference-rule))
-
-## Cast CLI Check
+### Cast CLI Check
 
 Before running any `cast` command, verify the CLI is installed:
 
@@ -29,44 +19,7 @@ if ! command -v cast >/dev/null 2>&1; then
 fi
 ```
 
-## Supported Chains
-
-Use this registry to resolve chain metadata, RPC endpoints, and Lockup contract addresses:
-
-| Chain | Chain ID | RPC URL | SablierLockup |
-| --- | --- | --- | --- |
-| Abstract | `2741` | `https://api.mainnet.abs.xyz` | `0x293d8d192C0C93225FF6bBE7415a56B57379bbA3` |
-| Arbitrum | `42161` | `https://arb1.arbitrum.io/rpc` | `0xF12AbfB041b5064b839Ca56638cDB62fEA712Db5` |
-| Avalanche | `43114` | `https://api.avax.network/ext/bc/C/rpc` | `0x7e146250Ed5CCCC6Ada924D456947556902acaFD` |
-| Base | `8453` | `https://mainnet.base.org` | `0xe261b366f231b12fcb58d6bbd71e57faee82431d` |
-| Berachain | `80094` | `https://rpc.berachain.com` | `0xC37B51a3c3Be55f0B34Fbd8Bd1F30cFF6d251408` |
-| Blast | `81457` | `https://rpc.blast.io` | `0xcD16d89cc79Ab0b52717A46b8A3F73E61014c7dc` |
-| BNB Chain | `56` | `https://bsc-dataseed1.bnbchain.org` | `0x06bd1Ec1d80acc45ba332f79B08d2d9e24240C74` |
-| Chiliz | `88888` | `https://rpc.chiliz.com` | `0x957a54aC691893B20c705e0b2EecbDDF5220d019` |
-| Core Dao | `1116` | `https://rpc.coredao.org` | `0x01Fed2aB51A830a3AF3AE1AB817dF1bA4F152bB0` |
-| Denergy | `369369` | `https://rpc.d.energy` | `0x9f5d28C8ed7F09e65519C1f6f394e523524cA38F` |
-| Ethereum | `1` | `https://ethereum-rpc.publicnode.com` | `0xcF8ce57fa442ba50aCbC57147a62aD03873FfA73` |
-| Gnosis | `100` | `https://rpc.gnosischain.com` | `0x87f87Eb0b59421D1b2Df7301037e923932176681` |
-| HyperEVM | `999` | `https://rpc.hyperliquid.xyz/evm` | `0x50ff828e66612A4D1F7141936F2B4078C7356329` |
-| Lightlink | `1890` | `https://replicator.phoenix.lightlink.io/rpc/v1` | `0xA4f1f4a5C55b5d9372CBB29112b14e1912A23d9D` |
-| Linea Mainnet | `59144` | `https://rpc.linea.build` | `0xc853DB30a908dC1b655bbd4A8B9d5DB8588C13c8` |
-| Mode | `34443` | `https://mainnet.mode.network` | `0x9513CE572D4f4AAc1Dd493bcd50866235D1c698d` |
-| Monad | `143` | `https://rpc.monad.xyz` | `0x003F5393F4836f710d492AD98D89F5BFCCF1C962` |
-| Morph | `2818` | `https://rpc.morphl2.io` | `0xE646D9A037c6B62e4d417592A10f57e77f007a27` |
-| OP Mainnet | `10` | `https://mainnet.optimism.io` | `0xe2620fB20fC9De61CD207d921691F4eE9d0fffd0` |
-| Polygon | `137` | `https://polygon-bor-rpc.publicnode.com` | `0x1E901b0E05A78C011D6D4cfFdBdb28a42A1c32EF` |
-| Scroll | `534352` | `https://rpc.scroll.io` | `0xcb60a39942CD5D1c2a1C8aBBEd99C43A73dF3f8d` |
-| Sei Network | `1329` | `https://evm-rpc.sei-apis.com` | `0x1d96e9d05f6910d22876177299261290537cfBBc` |
-| Sonic | `146` | `https://rpc.soniclabs.com` | `0x763Cfb7DF1D1BFe50e35E295688b3Df789D2feBB` |
-| Superseed | `5330` | `https://mainnet.superseed.xyz` | `0x2F1c6AD6306Bd0200D55b59AD54d4b44067D00E6` |
-| Unichain | `130` | `https://mainnet.unichain.org` | `0xfFb540fC132dCefb0Fdef96ef63FE2f2F1BD7CFd` |
-| XDC | `50` | `https://rpc.xinfin.network` | `0x2266901B1EcF499b4c91B6cBeA8e06700cFbde1e` |
-| ZKsync Era | `324` | `https://mainnet.era.zksync.io` | `0xC07E338Ce1aEd183A8b3c55f980548f5E463b5c5` |
-| Sepolia | `11155111` | `https://ethereum-sepolia-rpc.publicnode.com` | `0x6b0307b4338f2963A62106028E3B074C2c0510DA` |
-
-If the requested chain is not listed, check [Sablier Lockup deployments](https://docs.sablier.com/guides/lockup/deployments) for the contract address. If it is not found there either, ask the user to provide the RPC URL and SablierLockup contract address.
-
-## Signing Key Rule (Mandatory)
+### Signing Key Rule (Mandatory)
 
 For any signing command (`cast send`, `cast mktx`):
 
@@ -76,7 +29,7 @@ For any signing command (`cast send`, `cast mktx`):
 
 Do not continue without a signing key.
 
-## Confirmation Rule (Mandatory)
+### Confirmation Rule (Mandatory)
 
 Always use this sequence for state-changing transactions:
 
@@ -87,7 +40,11 @@ Always use this sequence for state-changing transactions:
 
 Never broadcast before explicit user confirmation.
 
-## Single vs. Batch Inference Rule
+## Intake Checklist
+
+Choose the transaction shape in this order before building calldata.
+
+### 1) Choose Mode
 
 Infer the creation mode from the user's request:
 
@@ -101,32 +58,219 @@ Infer the creation mode from the user's request:
 - If ambiguous, ask the user to clarify.
 - For batch requests exceeding **50 streams**, recommend the [Sablier Airdrops](https://app.sablier.com/airdrops) product instead, which is purpose-built for large-scale token distributions.
 
-## Vesting Shapes
+### 2) Choose Shape
 
-This skill supports five vesting shapes. Each maps to specific Lockup contract functions and a `shape` string passed in the create call.
+This reference supports five vesting shapes: **Linear**, **Cliff**, **Unlock in Steps**, **Monthly Unlocks**, and **Timelock**. Use [Entrypoint Reference](#entrypoint-reference) to map the chosen shape to the correct function and calldata encoding.
 
-| Shape | Contract Functions | `shape` String |
-| --- | --- | --- |
-| Linear | `createWithDurationsLL` / `createWithTimestampsLL` | `"linear"` |
-| Cliff | `createWithDurationsLL` / `createWithTimestampsLL` | `"cliff"` |
-| Unlock in Steps | `createWithDurationsLT` / `createWithTimestampsLT` | `"tranchedStepper"` |
-| Monthly Unlocks | `createWithDurationsLT` / `createWithTimestampsLT` | `"tranchedMonthly"` |
-| Timelock | `createWithDurationsLL` / `createWithTimestampsLL` | `"linearTimelock"` |
-
-### Variant Selection
-
-- **`Durations` variants** (`createWithDurationsLL`, `createWithDurationsLT`): Use when the user does **not** specify a specific start time. The stream starts immediately upon transaction confirmation.
-- **`Timestamps` variants** (`createWithTimestampsLL`, `createWithTimestampsLT`): Use when the user specifies a specific start time (e.g., "starting March 15" or "beginning at Unix timestamp 1710460800").
-
-### Default Shape Inference
-
-- If the vesting shape **cannot be inferred** from the user's instructions, default to **Linear**.
+- If the vesting shape cannot be inferred from the user's instructions, default to **Linear**.
 - If the user mentions a **cliff** but no other shape, default to **Cliff**.
-- If the inferred shape is **not among the five listed above**, inform the user that this skill does not currently support that shape and suggest they reach out to request it as a feature. In the meantime, tell them to check out the [vesting gallery](https://app.sablier.com/vesting/gallery) in the Sablier UI.
+- If the inferred shape is not among the five listed above, inform the user that this skill does not currently support that shape and suggest they reach out to request it as a feature. In the meantime, tell them to check out the [vesting gallery](https://app.sablier.com/vesting/gallery) in the Sablier UI.
 
-## Function Signatures & Arguments
+### 3) Choose Variant
 
-Refer to the ABI definitions in [lockup-v3.0-abi.json](../assets/lockup-v3.0-abi.json) for the exact tuple encoding of each function.
+- **`Durations` variants** (`createWithDurationsLL`, `createWithDurationsLT`): Use when the user does not specify a specific start time. The stream starts immediately upon transaction confirmation.
+- **`Timestamps` variants** (`createWithTimestampsLL`, `createWithTimestampsLT`): Use when the user specifies a specific start time (for example, "starting March 15" or "beginning at Unix timestamp 1710460800").
+
+### 4) Resolve Chain and `SablierLockup`
+
+Use [Supported Chains](#supported-chains) to resolve chain metadata, RPC endpoints, and `SablierLockup` contract addresses.
+
+If the requested chain is not listed, check [Sablier Lockup deployments](https://docs.sablier.com/guides/lockup/deployments) for the contract address. If it is not found there either, ask the user to provide the RPC URL and `SablierLockup` contract address.
+
+### 5) Collect Transaction Inputs
+
+Collect before building a transaction:
+
+- `chain` (ID and name)
+- signing method (`--private-key` explicitly or `ETH_PRIVATE_KEY` in env)
+- native gas balance (`ETH` etc.)
+- `SablierLockup` contract address
+- recipient count and number of streams
+- token, deposit amount, and approval requirements
+- function signature and arguments (see [Entrypoint Reference](#entrypoint-reference))
+
+## Preflight Checks
+
+Run these checks before previewing or broadcasting any state-changing transaction.
+
+### Stream Creation Fee (`MSG_VALUE`)
+
+For stream creation transactions, include a creation fee of approximately **$1 USD** worth of the chain's native token per stream.
+
+| Mode | `MSG_VALUE` |
+| --- | --- |
+| Single Stream | one-stream fee |
+| Batch of Streams | `perStreamFee * numberOfStreams` |
+
+- Convert the USD-denominated fee into native token units before building or broadcasting the transaction by browsing the web for the latest native token price.
+- Before sending, verify the wallet has enough native token for both `MSG_VALUE` and gas.
+
+### Allowance and Token Balance
+
+For stream creation:
+
+1. **ERC-20 allowance.** Check `allowance(owner, lockup)`. The required allowance depends on the mode:
+   - **Single Stream:** `DEPOSIT_AMOUNT`
+   - **Batch of Streams:** sum of `DEPOSIT_AMOUNT` across all streams
+   If allowance is below the required total, send an `approve` transaction to raise allowance before attempting stream creation.
+2. **ERC-20 token balance.** Check `balanceOf(owner)` is at least the total deposit amount (single-stream deposit or the sum of all batch deposits). If balance is insufficient, stop execution and inform the user they need more tokens (for example, obtain or purchase via Uniswap) before continuing.
+
+### Native Gas Balance for Every Transaction
+
+Before broadcasting each transaction, check that the sender has enough native gas token (ETH/POL/BNB/etc.) to pay transaction fees. Run this check again before each broadcast (`approve` and stream creation). If balance is insufficient, stop and tell the user to fund their wallet first. Recommend buying via [Transak](https://transak.com/buy).
+
+### Read-Only Validation Helpers
+
+```bash
+# Resolve sender from private key
+cast wallet address --private-key "$PRIVATE_KEY"
+
+# Check native gas token balance (ETH/POL/BNB/etc.)
+cast balance "$OWNER" --rpc-url "$RPC_URL"
+
+# Check token balance
+cast call "$TOKEN" "balanceOf(address)(uint256)" "$OWNER" --rpc-url "$RPC_URL"
+
+# Check token allowance
+cast call "$TOKEN" "allowance(address,address)(uint256)" "$OWNER" "$LOCKUP" --rpc-url "$RPC_URL"
+```
+
+## Minimal Execution Flow
+
+### Shared Setup
+
+#### 1) Resolve RPC and Key
+
+```bash
+RPC_URL="<resolved-or-user-provided-rpc>"
+PRIVATE_KEY="${ETH_PRIVATE_KEY:-}"
+
+if [[ -z "$PRIVATE_KEY" ]]; then
+  echo "Missing private key. Provide one explicitly or set ETH_PRIVATE_KEY."
+  exit 1
+fi
+```
+
+#### 2) Run Preflight Checks
+
+Run all checks from [Preflight Checks](#preflight-checks), compute the stream creation `MSG_VALUE` (single or batch), and run the native gas token check before each broadcast (`approve` and stream creation).
+
+### Single Stream
+
+#### 3) Build Preview Tx (No Broadcast)
+
+For `SablierLockup` stream creation (`create*`), pass the computed creation-fee amount in `MSG_VALUE`.
+
+```bash
+RAW_TX=$(cast mktx "$LOCKUP" "$FUNCTION_SIG" $FUNCTION_ARGS \
+  --value "$MSG_VALUE" \
+  --rpc-url "$RPC_URL" \
+  --private-key "$PRIVATE_KEY")
+
+echo "Preview raw tx: $RAW_TX"
+```
+
+Decode the calldata for human-readable confirmation:
+
+```bash
+cast 4byte-decode $(cast tx "$RAW_TX" input --rpc-url "$RPC_URL" 2>/dev/null || echo "$RAW_TX")
+```
+
+#### 4) Require Explicit Confirmation
+
+Use a clear confirmation prompt, for example:
+
+- `Confirm broadcast? Reply exactly: CONFIRM SEND`
+
+If the user does not explicitly confirm, stop.
+
+#### 5) Broadcast After Confirmation
+
+```bash
+cast send "$LOCKUP" "$FUNCTION_SIG" $FUNCTION_ARGS \
+  --value "$MSG_VALUE" \
+  --rpc-url "$RPC_URL" \
+  --private-key "$PRIVATE_KEY"
+```
+
+#### 6) Verify Receipt
+
+```bash
+cast receipt "$TX_HASH" --rpc-url "$RPC_URL"
+```
+
+#### 7) Direct User to the Sablier App
+
+After successful confirmation, inform the user they can view and manage their streams at [app.sablier.com](https://app.sablier.com).
+
+### Batch of Streams
+
+#### 3) Encode Individual Create Calls
+
+For each stream, ABI-encode the full `create*` calldata using `cast calldata`:
+
+```bash
+CALL_1=$(cast calldata "$FUNCTION_SIG" $ARGS_STREAM_1)
+CALL_2=$(cast calldata "$FUNCTION_SIG" $ARGS_STREAM_2)
+CALL_3=$(cast calldata "$FUNCTION_SIG" $ARGS_STREAM_3)
+# ... repeat for each stream
+```
+
+Each `CALL_N` is a complete calldata blob (4-byte selector + ABI-encoded arguments).
+
+#### 4) Build Batch Preview Tx (No Broadcast)
+
+Pass the encoded calls as a `bytes[]` array to `batch()` on the same `SablierLockup` contract:
+
+```bash
+RAW_TX=$(cast mktx "$LOCKUP" "batch(bytes[])" "[$CALL_1,$CALL_2,$CALL_3]" \
+  --value "$MSG_VALUE" \
+  --rpc-url "$RPC_URL" \
+  --private-key "$PRIVATE_KEY")
+
+echo "Preview raw tx: $RAW_TX"
+```
+
+Where `MSG_VALUE = perStreamFee * numberOfStreams`.
+
+#### 5) Require Explicit Confirmation
+
+Use the same confirmation rule as for a Single Stream: show the transaction details and require explicit user confirmation before broadcast.
+
+#### 6) Broadcast After Confirmation
+
+```bash
+cast send "$LOCKUP" "batch(bytes[])" "[$CALL_1,$CALL_2,$CALL_3]" \
+  --value "$MSG_VALUE" \
+  --rpc-url "$RPC_URL" \
+  --private-key "$PRIVATE_KEY"
+```
+
+#### 7) Verify Receipt
+
+```bash
+cast receipt "$TX_HASH" --rpc-url "$RPC_URL"
+```
+
+#### 8) Direct User to the Sablier App
+
+After successful confirmation, inform the user they can view and manage their streams at [app.sablier.com](https://app.sablier.com).
+
+## Entrypoint Reference
+
+Use this section after completing the intake checklist to map the requested vesting schedule to the correct `SablierLockup` function and calldata shape. Refer to the ABI definitions in [lockup-v3.0-abi.json](../assets/lockup-v3.0-abi.json) for the exact tuple encoding of each function.
+
+### Shape-to-Function Mapping
+
+| Shape | `Durations` Variant | `Timestamps` Variant | `shape` String |
+| --- | --- | --- | --- |
+| Linear | `createWithDurationsLL` | `createWithTimestampsLL` | `"linear"` |
+| Cliff | `createWithDurationsLL` | `createWithTimestampsLL` | `"cliff"` |
+| Unlock in Steps | `createWithDurationsLT` | `createWithTimestampsLT` | `"tranchedStepper"` |
+| Monthly Unlocks | `createWithDurationsLT` | `createWithTimestampsLT` | `"tranchedMonthly"` |
+| Timelock | `createWithDurationsLL` | `createWithTimestampsLL` | `"linearTimelock"` |
+
+Use the `Durations` variants when the stream should start immediately upon confirmation. Use the `Timestamps` variants when the user provides specific start or unlock times.
 
 ### `createWithDurationsLL`
 
@@ -200,7 +344,7 @@ createWithDurationsLT(
 
 | Shape | Tranche Construction |
 | --- | --- |
-| Unlock in Steps | Equal amounts, equal durations (e.g., 4 tranches of 250 tokens every 90 days) |
+| Unlock in Steps | Equal amounts, equal durations (for example, 4 tranches of 250 tokens every 90 days) |
 | Monthly Unlocks | Equal amounts, 30-day durations (use 2592000 seconds per tranche) |
 
 ### `createWithTimestampsLT`
@@ -238,158 +382,11 @@ batch(bytes[] calls)
 
 1. **calls** — `bytes[]` array where each element is the output of `cast calldata` for a `create*` function
 
-## Prerequisites
-
-### Stream creation fee (Lockup create calls)
-
-For stream creation transactions, include a creation fee of approximately **$1 USD** worth of the chain's native token per stream.
-
-| Mode | `MSG_VALUE` |
-| --- | --- |
-| Single Stream | one-stream fee |
-| Batch of Streams | `perStreamFee * numberOfStreams` |
-
-- Convert the USD-denominated fee into native token units before building or broadcasting the transaction by browsing the web for the latest native token price.
-- Before sending, verify the wallet has enough native token for both `MSG_VALUE` and gas.
-
-### For stream creation
-
-1. **ERC-20 allowance.** Check `allowance(owner, lockup)`. The required allowance depends on the mode:
-   - **Single Stream:** `DEPOSIT_AMOUNT`
-   - **Batch of Streams:** sum of `DEPOSIT_AMOUNT` across all streams
-   If allowance is below the required total, send an `approve` transaction to raise allowance before attempting stream creation.
-2. **ERC-20 token balance.** Check `balanceOf(owner)` is at least the total deposit amount (single stream deposit or sum of all batch deposits). If balance is insufficient, stop execution and inform the user they need more tokens (for example, obtain/purchase via Uniswap) before continuing.
-
-### For every transaction (`approve` or stream creation)
-
-Before broadcasting each transaction, check that the sender has enough native gas token (ETH/POL/BNB/etc.) to pay transaction fees. Run this check again before each broadcast (`approve` and stream creation). If balance is insufficient, stop and tell the user to fund their wallet first. Recommend buying via [Transak](https://transak.com/buy).
-
-## Minimal Execution Flow
-
-### Shared Setup
-
-#### 1) Resolve RPC and key
-
-```bash
-RPC_URL="<resolved-or-user-provided-rpc>"
-PRIVATE_KEY="${ETH_PRIVATE_KEY:-}"
-
-if [[ -z "$PRIVATE_KEY" ]]; then
-  echo "Missing private key. Provide one explicitly or set ETH_PRIVATE_KEY."
-  exit 1
-fi
-```
-
-#### 2) Run prerequisites
-
-Run all checks from [Prerequisites](#prerequisites), compute the stream creation `MSG_VALUE` (single or batch), and run the native gas token check before each broadcast (`approve` and stream creation).
-
-### Single Stream
-
-#### 3) Build preview tx (no broadcast)
-
-For Lockup stream creation (`create*`), pass the computed creation-fee amount in `MSG_VALUE`.
-
-```bash
-RAW_TX=$(cast mktx "$LOCKUP" "$FUNCTION_SIG" $FUNCTION_ARGS \
-  --value "$MSG_VALUE" \
-  --rpc-url "$RPC_URL" \
-  --private-key "$PRIVATE_KEY")
-
-echo "Preview raw tx: $RAW_TX"
-```
-
-Decode the calldata for human-readable confirmation:
-
-```bash
-cast 4byte-decode $(cast tx "$RAW_TX" input --rpc-url "$RPC_URL" 2>/dev/null || echo "$RAW_TX")
-```
-
-#### 4) Require explicit confirmation
-
-Use a clear confirmation prompt, for example:
-
-- `Confirm broadcast? Reply exactly: CONFIRM SEND`
-
-If the user does not explicitly confirm, stop.
-
-#### 5) Broadcast after confirmation
-
-```bash
-cast send "$LOCKUP" "$FUNCTION_SIG" $FUNCTION_ARGS \
-  --value "$MSG_VALUE" \
-  --rpc-url "$RPC_URL" \
-  --private-key "$PRIVATE_KEY"
-```
-
-#### 6) Verify receipt
-
-```bash
-cast receipt "$TX_HASH" --rpc-url "$RPC_URL"
-```
-
-#### 7) Direct user to the Sablier app
-
-After successful confirmation, inform the user they can view and manage their streams at [app.sablier.com](https://app.sablier.com).
-
-### Batch of Streams
-
-#### 3) Encode individual create calls
-
-For each stream, ABI-encode the full `create*` calldata using `cast calldata`:
-
-```bash
-CALL_1=$(cast calldata "$FUNCTION_SIG" $ARGS_STREAM_1)
-CALL_2=$(cast calldata "$FUNCTION_SIG" $ARGS_STREAM_2)
-CALL_3=$(cast calldata "$FUNCTION_SIG" $ARGS_STREAM_3)
-# ... repeat for each stream
-```
-
-Each `CALL_N` is a complete calldata blob (4-byte selector + ABI-encoded arguments).
-
-#### 4) Build batch preview tx (no broadcast)
-
-Pass the encoded calls as a `bytes[]` array to `batch()` on the same Lockup contract:
-
-```bash
-RAW_TX=$(cast mktx "$LOCKUP" "batch(bytes[])" "[$CALL_1,$CALL_2,$CALL_3]" \
-  --value "$MSG_VALUE" \
-  --rpc-url "$RPC_URL" \
-  --private-key "$PRIVATE_KEY")
-
-echo "Preview raw tx: $RAW_TX"
-```
-
-Where `MSG_VALUE = perStreamFee * numberOfStreams`.
-
-#### 5) Require explicit confirmation
-
-Same rule as single stream — show the transaction details and require explicit user confirmation before broadcast.
-
-#### 6) Broadcast after confirmation
-
-```bash
-cast send "$LOCKUP" "batch(bytes[])" "[$CALL_1,$CALL_2,$CALL_3]" \
-  --value "$MSG_VALUE" \
-  --rpc-url "$RPC_URL" \
-  --private-key "$PRIVATE_KEY"
-```
-
-#### 7) Verify receipt
-
-```bash
-cast receipt "$TX_HASH" --rpc-url "$RPC_URL"
-```
-
-#### 8) Direct user to the Sablier app
-
-After successful confirmation, inform the user they can view and manage their streams at [app.sablier.com](https://app.sablier.com).
-
-## Concrete Examples
+## Worked Examples
 
 ### Single Stream: `createWithDurationsLL`
 
-A single linear stream of 1000 USDC (6 decimals) with a 90-day cliff and 365-day total duration on Ethereum mainnet:
+A single cliff stream of 1000 USDC (6 decimals) with a 90-day cliff and 365-day total duration on Ethereum mainnet:
 
 ```bash
 LOCKUP="<lockup-address>"    # From Supported Chains table
@@ -408,14 +405,16 @@ cast send "$LOCKUP" \
 ```
 
 Notes:
+
 - `1000000000` = 1000 USDC in 6-decimal base units
-- `(0,0)` = no start unlock, no cliff unlock (pure linear)
-- `(7776000,31536000)` = 90-day cliff, 365-day total (in seconds)
+- `cliff` selects the Cliff shape
+- `(0,0)` = no start unlock and no lump-sum cliff unlock amount
+- `(7776000,31536000)` = 90-day cliff and 365-day total duration, both in seconds
 - Replace `$MSG_VALUE` with the computed creation fee
 
 ### Batch of Streams: 3x `createWithDurationsLL`
 
-Three linear streams of 1000 USDC each to different recipients, 365-day duration, no cliff, on Ethereum mainnet:
+A batch of three linear streams of 1000 USDC each to different recipients, with a 365-day duration and no cliff, on Ethereum mainnet:
 
 ```bash
 LOCKUP="<lockup-address>"    # From Supported Chains table
@@ -439,23 +438,46 @@ cast send "$LOCKUP" "batch(bytes[])" "[$CALL_1,$CALL_2,$CALL_3]" \
 ```
 
 Notes:
+
 - ERC-20 approval must cover the total deposit: 3 × 1000000000 = 3000000000 (3000 USDC)
+- `linear` selects the Linear shape
 - `MSG_VALUE` = 3× the per-stream creation fee
-- All three streams use the same Lockup contract and the same `batch()` entry point
+- All three streams use the same `SablierLockup` contract and the same `batch()` entrypoint
 - For more than 50 streams, use [Sablier Airdrops](https://app.sablier.com/airdrops) instead
 
-## Read-Only Validation Helpers
+## Supported Chains
 
-```bash
-# Resolve sender from private key
-cast wallet address --private-key "$PRIVATE_KEY"
+Use this registry to resolve chain metadata, RPC endpoints, and `SablierLockup` contract addresses:
 
-# Check native gas token balance (ETH/POL/BNB/etc.)
-cast balance "$OWNER" --rpc-url "$RPC_URL"
+| Chain | Chain ID | RPC URL | SablierLockup |
+| --- | --- | --- | --- |
+| Abstract | `2741` | `https://api.mainnet.abs.xyz` | `0x293d8d192C0C93225FF6bBE7415a56B57379bbA3` |
+| Arbitrum | `42161` | `https://arb1.arbitrum.io/rpc` | `0xF12AbfB041b5064b839Ca56638cDB62fEA712Db5` |
+| Avalanche | `43114` | `https://api.avax.network/ext/bc/C/rpc` | `0x7e146250Ed5CCCC6Ada924D456947556902acaFD` |
+| Base | `8453` | `https://mainnet.base.org` | `0xe261b366f231b12fcb58d6bbd71e57faee82431d` |
+| Berachain | `80094` | `https://rpc.berachain.com` | `0xC37B51a3c3Be55f0B34Fbd8Bd1F30cFF6d251408` |
+| Blast | `81457` | `https://rpc.blast.io` | `0xcD16d89cc79Ab0b52717A46b8A3F73E61014c7dc` |
+| BNB Chain | `56` | `https://bsc-dataseed1.bnbchain.org` | `0x06bd1Ec1d80acc45ba332f79B08d2d9e24240C74` |
+| Chiliz | `88888` | `https://rpc.chiliz.com` | `0x957a54aC691893B20c705e0b2EecbDDF5220d019` |
+| Core Dao | `1116` | `https://rpc.coredao.org` | `0x01Fed2aB51A830a3AF3AE1AB817dF1bA4F152bB0` |
+| Denergy | `369369` | `https://rpc.d.energy` | `0x9f5d28C8ed7F09e65519C1f6f394e523524cA38F` |
+| Ethereum | `1` | `https://ethereum-rpc.publicnode.com` | `0xcF8ce57fa442ba50aCbC57147a62aD03873FfA73` |
+| Gnosis | `100` | `https://rpc.gnosischain.com` | `0x87f87Eb0b59421D1b2Df7301037e923932176681` |
+| HyperEVM | `999` | `https://rpc.hyperliquid.xyz/evm` | `0x50ff828e66612A4D1F7141936F2B4078C7356329` |
+| Lightlink | `1890` | `https://replicator.phoenix.lightlink.io/rpc/v1` | `0xA4f1f4a5C55b5d9372CBB29112b14e1912A23d9D` |
+| Linea Mainnet | `59144` | `https://rpc.linea.build` | `0xc853DB30a908dC1b655bbd4A8B9d5DB8588C13c8` |
+| Mode | `34443` | `https://mainnet.mode.network` | `0x9513CE572D4f4AAc1Dd493bcd50866235D1c698d` |
+| Monad | `143` | `https://rpc.monad.xyz` | `0x003F5393F4836f710d492AD98D89F5BFCCF1C962` |
+| Morph | `2818` | `https://rpc.morphl2.io` | `0xE646D9A037c6B62e4d417592A10f57e77f007a27` |
+| OP Mainnet | `10` | `https://mainnet.optimism.io` | `0xe2620fB20fC9De61CD207d921691F4eE9d0fffd0` |
+| Polygon | `137` | `https://polygon-bor-rpc.publicnode.com` | `0x1E901b0E05A78C011D6D4cfFdBdb28a42A1c32EF` |
+| Scroll | `534352` | `https://rpc.scroll.io` | `0xcb60a39942CD5D1c2a1C8aBBEd99C43A73dF3f8d` |
+| Sei Network | `1329` | `https://evm-rpc.sei-apis.com` | `0x1d96e9d05f6910d22876177299261290537cfBBc` |
+| Sonic | `146` | `https://rpc.soniclabs.com` | `0x763Cfb7DF1D1BFe50e35E295688b3Df789D2feBB` |
+| Superseed | `5330` | `https://mainnet.superseed.xyz` | `0x2F1c6AD6306Bd0200D55b59AD54d4b44067D00E6` |
+| Unichain | `130` | `https://mainnet.unichain.org` | `0xfFb540fC132dCefb0Fdef96ef63FE2f2F1BD7CFd` |
+| XDC | `50` | `https://rpc.xinfin.network` | `0x2266901B1EcF499b4c91B6cBeA8e06700cFbde1e` |
+| ZKsync Era | `324` | `https://mainnet.era.zksync.io` | `0xC07E338Ce1aEd183A8b3c55f980548f5E463b5c5` |
+| Sepolia | `11155111` | `https://ethereum-sepolia-rpc.publicnode.com` | `0x6b0307b4338f2963A62106028E3B074C2c0510DA` |
 
-# Check token balance
-cast call "$TOKEN" "balanceOf(address)(uint256)" "$OWNER" --rpc-url "$RPC_URL"
-
-# Check token allowance
-cast call "$TOKEN" "allowance(address,address)(uint256)" "$OWNER" "$LOCKUP" --rpc-url "$RPC_URL"
-```
+If the requested chain is not listed, check [Sablier Lockup deployments](https://docs.sablier.com/guides/lockup/deployments) for the contract address. If it is not found there either, ask the user to provide the RPC URL and `SablierLockup` contract address.
