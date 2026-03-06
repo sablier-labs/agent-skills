@@ -6,6 +6,6 @@ Each create function comes in two variants: `WithTimestamps` (caller specifies e
 
 ## References
 
-- **Sablier documentation (LLM-optimized):** <https://docs.sablier.com/llms.txt> and <https://docs.sablier.com/llms-full.txt>
+- **Sablier documentation (LLM-optimized):** <https://docs.sablier.com/llms.txt>
 - **Deployed contract addresses:** <https://docs.sablier.com/guides/lockup/deployments>
 - **Solidity examples:** <https://github.com/sablier-labs/evm-examples>
