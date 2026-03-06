@@ -14,10 +14,6 @@ high-quality tests, debug failures, and maintain test suites efficiently.
 - Globals enabled (`describe`, `test`, `expect`, `vi`)
 - Path aliases configured per project
 
-**Skill delegation:**
-
-> **If the task is related to Zustand store testing, activate the `zustand` skill**
-
 # Quick Start
 
 ## Running Tests
@@ -102,8 +98,7 @@ afterEach(() => {
   // Reset environment
   process.env.NODE_ENV = originalEnv;
 
-  // Reset stores (if not using zustand skill)
-  // For Zustand stores, use the `zustand` skill
+  // Reset stores
 });
 ```
 
@@ -388,8 +383,7 @@ Example config: `vitest.config.ts`
 
 # Next Steps
 
-1. **For Zustand store testing** - Activate `zustand` skill
-2. **For component testing** - See `./references/testing-patterns.md` (React Testing Library setup)
+1. **For component testing** - See `./references/testing-patterns.md` (React Testing Library setup)
 3. **For monorepo-specific strategies** - See `./references/monorepo-testing.md`
 4. **For debugging help** - See `./references/troubleshooting.md`
 

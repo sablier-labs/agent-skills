@@ -41,7 +41,6 @@ npx skills add sablier-labs/agent-skills -l
 | `tailwind-css`         | Tailwind CSS v4 rules and tailwind-variants                       |
 | `vitest`               | Vitest v4 testing patterns for TypeScript React/Next.js           |
 | `xstate-react`         | XState v5 + React integration patterns                            |
-| `zustand`              | Zustand state management with TypeScript                          |
 
 ### Web3
 
