@@ -14,6 +14,7 @@ Collect before building a transaction:
 - `lockup` contract address (source from [Sablier Lockup deployments](https://docs.sablier.com/guides/lockup/deployments.md))
 - function signature and arguments (see [Function Signatures & Arguments](#function-signatures--arguments))
 - token approval requirements (for creating streams)
+- number of streams and recipients (single or batch — see [Single vs. Batch Inference Rule](#single-vs-batch-inference-rule))
 
 ## Cast CLI Check
 
@@ -85,6 +86,20 @@ Always use this sequence for state-changing transactions:
 4. Only after confirmation, run `cast send`.
 
 Never broadcast before explicit user confirmation.
+
+## Single vs. Batch Inference Rule
+
+Infer the creation mode from the user's request:
+
+| Signal | Mode |
+| --- | --- |
+| One recipient, one stream | **Single Stream** |
+| Multiple recipients or multiple streams | **Batch of Streams** |
+| "create streams for 5 recipients" | **Batch of Streams** |
+| "create a stream for Alice" | **Single Stream** |
+
+- If ambiguous, ask the user to clarify.
+- For batch requests exceeding **50 streams**, recommend the [Sablier Airdrops](https://app.sablier.com/airdrops) product instead, which is purpose-built for large-scale token distributions.
 
 ## Vesting Shapes
 
@@ -211,21 +226,39 @@ createWithTimestampsLT(
 | Unlock in Steps | Equal amounts at equally spaced timestamps |
 | Monthly Unlocks | Equal amounts at monthly timestamps (add 30 days per tranche to start) |
 
+### `batch`
+
+Used to create **multiple streams in a single transaction**. Each element in the `calls` array is a fully ABI-encoded `create*` calldata.
+
+```
+batch(bytes[] calls)
+```
+
+**Arguments:**
+
+1. **calls** — `bytes[]` array where each element is the output of `cast calldata` for a `create*` function
+
 ## Prerequisites
 
 ### Stream creation fee (Lockup create calls)
 
 For stream creation transactions, include a creation fee of approximately **$1 USD** worth of the chain's native token per stream.
 
-- Single-stream create call: set `MSG_VALUE` to one-stream fee.
-- Batch create call: set `MSG_VALUE = perStreamFee * numberOfStreams`.
+| Mode | `MSG_VALUE` |
+| --- | --- |
+| Single Stream | one-stream fee |
+| Batch of Streams | `perStreamFee * numberOfStreams` |
+
 - Convert the USD-denominated fee into native token units before building or broadcasting the transaction by browsing the web for the latest native token price.
 - Before sending, verify the wallet has enough native token for both `MSG_VALUE` and gas.
 
 ### For stream creation
 
-1. **ERC-20 allowance.** Check `allowance(owner, lockup)`. If allowance is below `DEPOSIT_AMOUNT`, send an `approve` transaction to raise allowance before attempting stream creation.
-2. **ERC-20 token balance.** Check `balanceOf(owner)` is at least `DEPOSIT_AMOUNT`. If balance is insufficient, stop execution and inform the user they need more tokens (for example, obtain/purchase via Uniswap) before continuing.
+1. **ERC-20 allowance.** Check `allowance(owner, lockup)`. The required allowance depends on the mode:
+   - **Single Stream:** `DEPOSIT_AMOUNT`
+   - **Batch of Streams:** sum of `DEPOSIT_AMOUNT` across all streams
+   If allowance is below the required total, send an `approve` transaction to raise allowance before attempting stream creation.
+2. **ERC-20 token balance.** Check `balanceOf(owner)` is at least the total deposit amount (single stream deposit or sum of all batch deposits). If balance is insufficient, stop execution and inform the user they need more tokens (for example, obtain/purchase via Uniswap) before continuing.
 
 ### For every transaction (`approve` or stream creation)
 
@@ -233,7 +266,9 @@ Before broadcasting each transaction, check that the sender has enough native ga
 
 ## Minimal Execution Flow
 
-### 1) Resolve RPC and key
+### Shared Setup
+
+#### 1) Resolve RPC and key
 
 ```bash
 RPC_URL="<resolved-or-user-provided-rpc>"
@@ -245,13 +280,15 @@ if [[ -z "$PRIVATE_KEY" ]]; then
 fi
 ```
 
-### 2) Run prerequisites
+#### 2) Run prerequisites
 
-Run all checks from [Prerequisites](#prerequisites), compute the stream creation `MSG_VALUE` (single create or batch), and run the native gas token check before each broadcast (`approve` and stream creation).
+Run all checks from [Prerequisites](#prerequisites), compute the stream creation `MSG_VALUE` (single or batch), and run the native gas token check before each broadcast (`approve` and stream creation).
 
-### 3) Build preview tx (no broadcast)
+### Single Stream
 
-For Lockup stream creation (`create*` or `batch()` with create calls), pass the computed creation-fee amount in `MSG_VALUE`.
+#### 3) Build preview tx (no broadcast)
+
+For Lockup stream creation (`create*`), pass the computed creation-fee amount in `MSG_VALUE`.
 
 ```bash
 RAW_TX=$(cast mktx "$LOCKUP" "$FUNCTION_SIG" $FUNCTION_ARGS \
@@ -268,7 +305,7 @@ Decode the calldata for human-readable confirmation:
 cast 4byte-decode $(cast tx "$RAW_TX" input --rpc-url "$RPC_URL" 2>/dev/null || echo "$RAW_TX")
 ```
 
-### 4) Require explicit confirmation
+#### 4) Require explicit confirmation
 
 Use a clear confirmation prompt, for example:
 
@@ -276,7 +313,7 @@ Use a clear confirmation prompt, for example:
 
 If the user does not explicitly confirm, stop.
 
-### 5) Broadcast after confirmation
+#### 5) Broadcast after confirmation
 
 ```bash
 cast send "$LOCKUP" "$FUNCTION_SIG" $FUNCTION_ARGS \
@@ -285,17 +322,72 @@ cast send "$LOCKUP" "$FUNCTION_SIG" $FUNCTION_ARGS \
   --private-key "$PRIVATE_KEY"
 ```
 
-### 6) Verify receipt
+#### 6) Verify receipt
 
 ```bash
 cast receipt "$TX_HASH" --rpc-url "$RPC_URL"
 ```
 
-### 7) Direct user to the Sablier app
+#### 7) Direct user to the Sablier app
 
 After successful confirmation, inform the user they can view and manage their streams at [app.sablier.com](https://app.sablier.com).
 
-## Concrete Example: `createWithDurationsLL`
+### Batch of Streams
+
+#### 3) Encode individual create calls
+
+For each stream, ABI-encode the full `create*` calldata using `cast calldata`:
+
+```bash
+CALL_1=$(cast calldata "$FUNCTION_SIG" $ARGS_STREAM_1)
+CALL_2=$(cast calldata "$FUNCTION_SIG" $ARGS_STREAM_2)
+CALL_3=$(cast calldata "$FUNCTION_SIG" $ARGS_STREAM_3)
+# ... repeat for each stream
+```
+
+Each `CALL_N` is a complete calldata blob (4-byte selector + ABI-encoded arguments).
+
+#### 4) Build batch preview tx (no broadcast)
+
+Pass the encoded calls as a `bytes[]` array to `batch()` on the same Lockup contract:
+
+```bash
+RAW_TX=$(cast mktx "$LOCKUP" "batch(bytes[])" "[$CALL_1,$CALL_2,$CALL_3]" \
+  --value "$MSG_VALUE" \
+  --rpc-url "$RPC_URL" \
+  --private-key "$PRIVATE_KEY")
+
+echo "Preview raw tx: $RAW_TX"
+```
+
+Where `MSG_VALUE = perStreamFee * numberOfStreams`.
+
+#### 5) Require explicit confirmation
+
+Same rule as single stream — show the transaction details and require explicit user confirmation before broadcast.
+
+#### 6) Broadcast after confirmation
+
+```bash
+cast send "$LOCKUP" "batch(bytes[])" "[$CALL_1,$CALL_2,$CALL_3]" \
+  --value "$MSG_VALUE" \
+  --rpc-url "$RPC_URL" \
+  --private-key "$PRIVATE_KEY"
+```
+
+#### 7) Verify receipt
+
+```bash
+cast receipt "$TX_HASH" --rpc-url "$RPC_URL"
+```
+
+#### 8) Direct user to the Sablier app
+
+After successful confirmation, inform the user they can view and manage their streams at [app.sablier.com](https://app.sablier.com).
+
+## Concrete Examples
+
+### Single Stream: `createWithDurationsLL`
 
 A single linear stream of 1000 USDC (6 decimals) with a 90-day cliff and 365-day total duration on Ethereum mainnet:
 
@@ -320,6 +412,37 @@ Notes:
 - `(0,0)` = no start unlock, no cliff unlock (pure linear)
 - `(7776000,31536000)` = 90-day cliff, 365-day total (in seconds)
 - Replace `$MSG_VALUE` with the computed creation fee
+
+### Batch of Streams: 3x `createWithDurationsLL`
+
+Three linear streams of 1000 USDC each to different recipients, 365-day duration, no cliff, on Ethereum mainnet:
+
+```bash
+LOCKUP="<lockup-address>"    # From deployments page
+TOKEN="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"  # USDC on Ethereum
+SENDER=$(cast wallet address --private-key "$PRIVATE_KEY")
+FUNCTION_SIG="createWithDurationsLL((address,address,uint128,address,bool,bool,string),(uint128,uint128),(uint40,uint40))"
+
+# Encode each create call
+CALL_1=$(cast calldata "$FUNCTION_SIG" \
+  "($SENDER,0xRecipient1,1000000000,$TOKEN,true,true,linear)" "(0,0)" "(0,31536000)")
+CALL_2=$(cast calldata "$FUNCTION_SIG" \
+  "($SENDER,0xRecipient2,1000000000,$TOKEN,true,true,linear)" "(0,0)" "(0,31536000)")
+CALL_3=$(cast calldata "$FUNCTION_SIG" \
+  "($SENDER,0xRecipient3,1000000000,$TOKEN,true,true,linear)" "(0,0)" "(0,31536000)")
+
+# MSG_VALUE = perStreamFee * 3
+cast send "$LOCKUP" "batch(bytes[])" "[$CALL_1,$CALL_2,$CALL_3]" \
+  --value "$MSG_VALUE" \
+  --rpc-url "$RPC_URL" \
+  --private-key "$PRIVATE_KEY"
+```
+
+Notes:
+- ERC-20 approval must cover the total deposit: 3 × 1000000000 = 3000000000 (3000 USDC)
+- `MSG_VALUE` = 3× the per-stream creation fee
+- All three streams use the same Lockup contract and the same `batch()` entry point
+- For more than 50 streams, use [Sablier Airdrops](https://app.sablier.com/airdrops) instead
 
 ## Read-Only Validation Helpers
 
