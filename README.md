@@ -8,14 +8,14 @@ A collection of agent skills for AI coding assistants developed by Sablier Labs.
 # Add all skills from this repository
 npx skills add sablier-labs/agent-skills
 
-# Add a specific skill (e.g., effect-ts)
-npx skills add sablier-labs/agent-skills -s effect-ts
+# Add a specific skill (e.g., vitest)
+npx skills add sablier-labs/agent-skills -s vitest
 
 # Add globally for all projects
-npx skills add sablier-labs/agent-skills -s effect-ts -g
+npx skills add sablier-labs/agent-skills -s vitest -g
 
 # Target a specific agent (claude-code, cursor, cline, codex, etc.)
-npx skills add sablier-labs/agent-skills -s effect-ts -a claude-code
+npx skills add sablier-labs/agent-skills -s vitest -a claude-code
 
 # List available skills before installing
 npx skills add sablier-labs/agent-skills -l
@@ -36,7 +36,6 @@ npx skills add sablier-labs/agent-skills -l
 
 | Skill                  | Description                                                       |
 | ---------------------- | ----------------------------------------------------------------- |
-| `effect-ts`            | Effect-TS functional programming patterns and Next.js integration |
 | `spec-from-screenshot` | Analyze screenshots and generate implementation specs             |
 | `tailwind-css`         | Tailwind CSS v4 rules and tailwind-variants                       |
 | `vitest`               | Vitest v4 testing patterns for TypeScript React/Next.js           |
