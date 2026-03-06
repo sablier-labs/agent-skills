@@ -449,35 +449,37 @@ Notes:
 
 Use this registry to resolve chain metadata, RPC endpoints, and `SablierLockup` contract addresses:
 
-| Chain | Chain ID | RPC URL | SablierLockup |
+| Chain | Chain ID | SablierLockup | RPC URL |
 | --- | --- | --- | --- |
-| Abstract | `2741` | `https://api.mainnet.abs.xyz` | `0x293d8d192C0C93225FF6bBE7415a56B57379bbA3` |
-| Arbitrum | `42161` | `https://arb1.arbitrum.io/rpc` | `0xF12AbfB041b5064b839Ca56638cDB62fEA712Db5` |
-| Avalanche | `43114` | `https://api.avax.network/ext/bc/C/rpc` | `0x7e146250Ed5CCCC6Ada924D456947556902acaFD` |
-| Base | `8453` | `https://mainnet.base.org` | `0xe261b366f231b12fcb58d6bbd71e57faee82431d` |
-| Berachain | `80094` | `https://rpc.berachain.com` | `0xC37B51a3c3Be55f0B34Fbd8Bd1F30cFF6d251408` |
-| Blast | `81457` | `https://rpc.blast.io` | `0xcD16d89cc79Ab0b52717A46b8A3F73E61014c7dc` |
-| BNB Chain | `56` | `https://bsc-dataseed1.bnbchain.org` | `0x06bd1Ec1d80acc45ba332f79B08d2d9e24240C74` |
-| Chiliz | `88888` | `https://rpc.chiliz.com` | `0x957a54aC691893B20c705e0b2EecbDDF5220d019` |
-| Core Dao | `1116` | `https://rpc.coredao.org` | `0x01Fed2aB51A830a3AF3AE1AB817dF1bA4F152bB0` |
-| Denergy | `369369` | `https://rpc.d.energy` | `0x9f5d28C8ed7F09e65519C1f6f394e523524cA38F` |
-| Ethereum | `1` | `https://ethereum-rpc.publicnode.com` | `0xcF8ce57fa442ba50aCbC57147a62aD03873FfA73` |
-| Gnosis | `100` | `https://rpc.gnosischain.com` | `0x87f87Eb0b59421D1b2Df7301037e923932176681` |
-| HyperEVM | `999` | `https://rpc.hyperliquid.xyz/evm` | `0x50ff828e66612A4D1F7141936F2B4078C7356329` |
-| Lightlink | `1890` | `https://replicator.phoenix.lightlink.io/rpc/v1` | `0xA4f1f4a5C55b5d9372CBB29112b14e1912A23d9D` |
-| Linea Mainnet | `59144` | `https://rpc.linea.build` | `0xc853DB30a908dC1b655bbd4A8B9d5DB8588C13c8` |
-| Mode | `34443` | `https://mainnet.mode.network` | `0x9513CE572D4f4AAc1Dd493bcd50866235D1c698d` |
-| Monad | `143` | `https://rpc.monad.xyz` | `0x003F5393F4836f710d492AD98D89F5BFCCF1C962` |
-| Morph | `2818` | `https://rpc.morphl2.io` | `0xE646D9A037c6B62e4d417592A10f57e77f007a27` |
-| OP Mainnet | `10` | `https://mainnet.optimism.io` | `0xe2620fB20fC9De61CD207d921691F4eE9d0fffd0` |
-| Polygon | `137` | `https://polygon-bor-rpc.publicnode.com` | `0x1E901b0E05A78C011D6D4cfFdBdb28a42A1c32EF` |
-| Scroll | `534352` | `https://rpc.scroll.io` | `0xcb60a39942CD5D1c2a1C8aBBEd99C43A73dF3f8d` |
-| Sei Network | `1329` | `https://evm-rpc.sei-apis.com` | `0x1d96e9d05f6910d22876177299261290537cfBBc` |
-| Sonic | `146` | `https://rpc.soniclabs.com` | `0x763Cfb7DF1D1BFe50e35E295688b3Df789D2feBB` |
-| Superseed | `5330` | `https://mainnet.superseed.xyz` | `0x2F1c6AD6306Bd0200D55b59AD54d4b44067D00E6` |
-| Unichain | `130` | `https://mainnet.unichain.org` | `0xfFb540fC132dCefb0Fdef96ef63FE2f2F1BD7CFd` |
-| XDC | `50` | `https://rpc.xinfin.network` | `0x2266901B1EcF499b4c91B6cBeA8e06700cFbde1e` |
-| ZKsync Era | `324` | `https://mainnet.era.zksync.io` | `0xC07E338Ce1aEd183A8b3c55f980548f5E463b5c5` |
-| Sepolia | `11155111` | `https://ethereum-sepolia-rpc.publicnode.com` | `0x6b0307b4338f2963A62106028E3B074C2c0510DA` |
+| Ethereum | `1` | `0xcF8ce57fa442ba50aCbC57147a62aD03873FfA73` | `https://ethereum-rpc.publicnode.com` |
+| Abstract | `2741` | `0x293d8d192C0C93225FF6bBE7415a56B57379bbA3` | `https://api.mainnet.abs.xyz` |
+| Arbitrum | `42161` | `0xF12AbfB041b5064b839Ca56638cDB62fEA712Db5` | `https://arb1.arbitrum.io/rpc` |
+| Avalanche | `43114` | `0x7e146250Ed5CCCC6Ada924D456947556902acaFD` | `https://api.avax.network/ext/bc/C/rpc` |
+| Base | `8453` | `0xe261b366f231b12fcb58d6bbd71e57faee82431d` | `https://mainnet.base.org` |
+| Berachain | `80094` | `0xC37B51a3c3Be55f0B34Fbd8Bd1F30cFF6d251408` | `https://rpc.berachain.com` |
+| Blast | `81457` | `0xcD16d89cc79Ab0b52717A46b8A3F73E61014c7dc` | `https://rpc.blast.io` |
+| BNB Chain | `56` | `0x06bd1Ec1d80acc45ba332f79B08d2d9e24240C74` | `https://bsc-dataseed1.bnbchain.org` |
+| Chiliz | `88888` | `0x957a54aC691893B20c705e0b2EecbDDF5220d019` | `https://rpc.chiliz.com` |
+| Core Dao | `1116` | `0x01Fed2aB51A830a3AF3AE1AB817dF1bA4F152bB0` | `https://rpc.coredao.org` |
+| Denergy | `369369` | `0x9f5d28C8ed7F09e65519C1f6f394e523524cA38F` | `https://rpc.d.energy` |
+| Gnosis | `100` | `0x87f87Eb0b59421D1b2Df7301037e923932176681` | `https://rpc.gnosischain.com` |
+| HyperEVM | `999` | `0x50ff828e66612A4D1F7141936F2B4078C7356329` | `https://rpc.hyperliquid.xyz/evm` |
+| Lightlink | `1890` | `0xA4f1f4a5C55b5d9372CBB29112b14e1912A23d9D` | `https://replicator.phoenix.lightlink.io/rpc/v1` |
+| Linea Mainnet | `59144` | `0xc853DB30a908dC1b655bbd4A8B9d5DB8588C13c8` | `https://rpc.linea.build` |
+| Mode | `34443` | `0x9513CE572D4f4AAc1Dd493bcd50866235D1c698d` | `https://mainnet.mode.network` |
+| Monad | `143` | `0x003F5393F4836f710d492AD98D89F5BFCCF1C962` | `https://rpc.monad.xyz` |
+| Morph | `2818` | `0xE646D9A037c6B62e4d417592A10f57e77f007a27` | `https://rpc.morphl2.io` |
+| OP Mainnet | `10` | `0xe2620fB20fC9De61CD207d921691F4eE9d0fffd0` | `https://mainnet.optimism.io` |
+| Polygon | `137` | `0x1E901b0E05A78C011D6D4cfFdBdb28a42A1c32EF` | `https://polygon-bor-rpc.publicnode.com` |
+| Scroll | `534352` | `0xcb60a39942CD5D1c2a1C8aBBEd99C43A73dF3f8d` | `https://rpc.scroll.io` |
+| Sei Network | `1329` | `0x1d96e9d05f6910d22876177299261290537cfBBc` | `https://evm-rpc.sei-apis.com` |
+| Sonic | `146` | `0x763Cfb7DF1D1BFe50e35E295688b3Df789D2feBB` | `https://rpc.soniclabs.com` |
+| Superseed | `5330` | `0x2F1c6AD6306Bd0200D55b59AD54d4b44067D00E6` | `https://mainnet.superseed.xyz` |
+| Unichain | `130` | `0xfFb540fC132dCefb0Fdef96ef63FE2f2F1BD7CFd` | `https://mainnet.unichain.org` |
+| XDC | `50` | `0x2266901B1EcF499b4c91B6cBeA8e06700cFbde1e` | `https://rpc.xinfin.network` |
+| ZKsync Era | `324` | `0xC07E338Ce1aEd183A8b3c55f980548f5E463b5c5` | `https://mainnet.era.zksync.io` |
+| Sepolia | `11155111` | `0x6b0307b4338f2963A62106028E3B074C2c0510DA` | `https://ethereum-sepolia-rpc.publicnode.com` |
 
-If the requested chain is not listed, check [Sablier Lockup deployments](https://docs.sablier.com/guides/lockup/deployments) for the contract address. If it is not found there either, ask the user to provide the RPC URL and `SablierLockup` contract address.
+Note that Ethereum can also be referred to as "Mainnet".
+
+If the requested chain is not listed, check [Sablier Lockup deployments](https://docs.sablier.com/guides/lockup/deployments.md) for the contract address. If it is not found there either, ask the user to provide the RPC URL and `SablierLockup` contract address.

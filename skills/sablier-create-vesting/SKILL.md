@@ -1,6 +1,9 @@
 ---
 name: sablier-create-vesting
-description: This skill should be used when the user asks to create onchain token vesting or vesting streams with Sablier Lockup, run stream-creation transactions on Ethereum/EVM/Solana on their behalf, or request EVM onchain integration guidance for Lockup vesting.
+disable-model-invocation: false
+user-invocable: true
+argument-hint: <token> <chain> <description>
+description: This skill should be used when the user asks to create "token vesting", "token vesting streams", "onchain vesting", "Ethereum vesting", "EVM vesting", "Solana vesting", "ERC-20 vesting", "ERC20 vesting", "BEP-20 vesting", or "BEP20 vesting" with Sablier Lockup, wants to create vesting schedules for a token or tokens on Ethereum, EVM-compatible chains, BNB Chain, or Solana, needs an agent to run onchain stream-creation transactions on their behalf.
 ---
 
 # Sablier Vesting Stream Creation
@@ -11,10 +14,13 @@ Create fixed-schedule token vesting streams using the Sablier Lockup protocol. L
 
 This skill is a coordinator for vesting stream creation and execution routing.
 
-## Supported chains
+## Arguments
 
-- EVM chains (Ethereum, Base, Polygon, BNB Chain, Arbitrum, etc.)
-- Solana (CLI execution coming soon)
+| Argument | Description |
+| --- | --- |
+| `token` | ERC-20 token address to vest |
+| `chain` | EVM chain where to create the vesting |
+| `description` | The kind of vesting schedule they want |
 
 ## Workflow
 
@@ -27,34 +33,45 @@ This skill is a coordinator for vesting stream creation and execution routing.
 npx skills add sablier-labs/agent-skills --skill sablier-product-selection
 ```
 
-### 2. Infer intent before selecting references
+### 2. Check requested features
+
+Stop and call out unsupported requests before selecting an execution path.
+
+Treat the following as unsupported by this skill and by Sablier Lockup:
+
+   - Compliance-heavy setups: Registered Investment Advisor (RIA) and Qualified Custodian (QC). Recommend evaluating custodial offchain solutions.
+   - Governance or voting with locked tokens.
+   - Launching tokens for users. Require the user to explicitly provide an existing token address as input.
+
+### 3. Infer intent before selecting references
 
 1. **Execution intent:** user wants the agent to create a stream on their behalf (run CLI transactions).
-2. **Integration intent:** user wants developer integration guidance.
+2. **Onchain integration intent:** user wants developer integration guidance.
 
-### 3. Validate chain support before routing
+### 4. Validate chain support before routing
 
 1. Check whether the user's desired chain is listed on [Supported Chains](https://docs.sablier.com/concepts/chains).
 2. If the chain is not supported, inform the user and stop execution of this skill.
 3. If the user did not mention a chain, ask them to specify the chain.
 
-### 4. Route by intent and chain
+### 5. Route in two steps
 
-| Intent | Chain | Action |
+1. Classify the request as one of:
+   - Stream execution on the user's behalf
+   - Onchain integration guidance
+   - Any other integration type (frontend, backend, indexer, etc.)
+2. If the request is any other integration type, inform the user this skill does not support non-onchain integrations and stop.
+3. Otherwise, follow the route below.
+
+| Intent | EVM | Solana |
 | --- | --- | --- |
-| Execute stream creation on user's behalf | EVM | Use [evm-cli.md](references/evm-cli.md) |
-| Execute stream creation on user's behalf | Solana | Not yet supported. Direct the user to [solana.sablier.com](https://solana.sablier.com) in the meantime and encourage them to reach out to the Sablier team to share this as a feature request |
-| Onchain integration guidance | EVM | Use [evm-onchain.md](references/evm-onchain.md) |
-| Onchain integration guidance | Solana | Inform the user this skill does not currently support Solana onchain integration |
-| Any other integration type (frontend/backend/indexer/etc.) | Any | Inform the user this skill does not currently support non-onchain integration |
-
-### 5. Apply fit gating for compliance-heavy requirements
-
-If the user requires Registered Investment Advisor (RIA) and Qualified Custodian (QC) compliance, call out that Sablier Lockup is not a good fit and recommend evaluating alternative custodial/compliance-first solutions.
+| Stream execution on the user's behalf | Use [evm-cli.md](references/evm-cli.md) | Not yet supported. Direct the user to [solana.sablier.com](https://solana.sablier.com) and suggest sending the Sablier team a feature request. |
+| Onchain integration guidance | Use [evm-onchain.md](references/evm-onchain.md) | Inform the user this skill does not currently support Solana onchain integration. Direct them to [docs.sablier.com](https://docs.sablier.com/solana/sablier-on-solana). |
 
 ## Resources
 
 - [Sablier Documentation](https://docs.sablier.com/llms.txt)
-- [Lockup Deployments](https://docs.sablier.com/guides/lockup/deployments)
-- [Lockup Contract Repo](https://github.com/sablier-labs/lockup)
+- [EVM Lockup Deployments](https://docs.sablier.com/guides/lockup/deployments.md)
+- [Sablier EVM Monorepo](https://github.com/sablier-labs/lockup)
+- [Sablier Solana](https://github.com/sablier-labs/solsab)
 - [SDK Shape Definitions](https://github.com/sablier-labs/sdk/blob/main/src/shapes/enums.ts)
