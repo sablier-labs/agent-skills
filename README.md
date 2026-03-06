@@ -25,12 +25,14 @@ npx skills add sablier-labs/agent-skills -l
 
 ### Sablier
 
-| Skill              | Description                                                                    |
-| ------------------ | ------------------------------------------------------------------------------ |
-| `sablier-design`   | Sablier dark-theme aesthetic and production-grade React interfaces             |
-| `sablier-protocol` | Sablier protocol overview: token vesting, airdrops, and onchain payroll        |
-| `sablier-icon`     | Recolor the Sablier icon SVG to any brand or hex color, with PNG/JPG export    |
-| `sablier-writing`  | Content creation with Sablier brand voice: blog posts, case studies, X/Twitter |
+| Skill            | Description                                                                    |
+| ---------------- | ------------------------------------------------------------------------------ |
+| `sablier-design` | Sablier dark-theme aesthetic and production-grade React interfaces             |
+| `sablier-icon`   | Recolor the Sablier icon SVG to any brand or hex color, with PNG/JPG export    |
+| `sablier-writing` | Content creation with Sablier brand voice: blog posts, case studies, X/Twitter |
+
+> [!TIP]
+> Looking to create vesting streams or learn about the Sablier protocol? See [sablier-labs/sablier-skills](https://github.com/sablier-labs/sablier-skills) for user-facing skills.
 
 ### Development
 
