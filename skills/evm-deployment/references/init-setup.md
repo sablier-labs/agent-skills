@@ -179,15 +179,6 @@ Campaigns are created via factory (CREATE2). Constructor args are embedded in th
      --watch
    ```
 
-### Campaign Contract Names
-
-| Factory                       | Campaign Contract      |
-| ----------------------------- | ---------------------- |
-| `SablierFactoryMerkleInstant` | `SablierMerkleInstant` |
-| `SablierFactoryMerkleLL`      | `SablierMerkleLL`      |
-| `SablierFactoryMerkleLT`      | `SablierMerkleLT`      |
-| `SablierFactoryMerkleVCA`     | `SablierMerkleVCA`     |
-
 ### Notes
 
 - Scripts have hardcoded dummy parameters (merkleRoot, IPFS CID) for testing
