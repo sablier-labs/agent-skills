@@ -151,6 +151,42 @@ For other verifiers: https://getfoundry.sh/forge/reference/verify-contract
 | SablierComptroller | Core comptroller contract | Skip if already deployed, this can be verified through `getComptroller` in `BaseScript.sol` in `@sablier/evm-utils`. |
 | ERC20 Faucet       | ERC20 token faucet        | Always deploy                                                                                                        |
 
+#### Comptroller Upgrade
+
+To upgrade an existing Comptroller proxy to a new implementation, use `UpgradeComptrollerProxy.s.sol`. This script
+deploys a new implementation and sets it on the existing proxy, with a storage layout collision check against the
+previous version.
+
+**Steps:**
+
+1. **Flatten the previous Comptroller version** (e.g., v1.0 from `evm-utils` repo):
+
+   ```bash
+   forge flatten src/SablierComptroller.sol > SablierComptrollerV10.sol
+   ```
+
+2. **Place the flattened file** in `src/legacy/` directory of the current repo.
+
+3. **Build and run the upgrade script**:
+
+   ```bash
+   just build
+   forge script scripts/solidity/UpgradeComptrollerProxy.s.sol:UpgradeComptrollerProxy \
+     --broadcast \
+     --rpc-url <chain_name> \
+     --private-key $PRIVATE_KEY \
+     -vvv
+   ```
+
+The script will:
+- Deploy a new `SablierComptroller` implementation
+- Set it as the implementation of the existing proxy (via `Upgrades.upgradeProxy`)
+- Perform storage layout comparison against `SablierComptrollerV10.sol:SablierComptroller`
+- Return the new implementation address
+
+**Note:** The `referenceContract` in the script must match the flattened file name. The script uses
+`opts.unsafeAllow = "constructor"` to bypass the constructor check for the implementation.
+
 ### Flow
 
 | Contract          | Description             | Notes                                      |
