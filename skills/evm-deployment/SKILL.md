@@ -1,11 +1,11 @@
 ---
 name: evm-deployment
-description: Deploy Sablier EVM contracts (Comptroller, ERC20 Faucet, Flow, Lockup, Airdrops) with full workflow automation. This skill should be used when the user asks to "deploy", "deploy protocol", "deploy to chain", or mentions deployment-related tasks. Handles contract deployment, explorer verification, SDK updates, and sample data creation through Init script.
+description: Deploy Sablier EVM contracts (Utils, Flow, Lockup, Airdrops, Bob) with full workflow automation. This skill should be used when the user asks to "deploy", "deploy protocol", "deploy to chain", or mentions deployment-related tasks. Handles contract deployment, explorer verification, SDK updates, and initial setup through Init scripts.
 ---
 
 ## Overview
 
-End-to-end deployment workflow for Sablier EVM contracts. Supports Comptroller, Flow, Lockup, and Airdrops with
+End-to-end deployment workflow for Sablier EVM contracts. Supports Utils, Flow, Lockup, Airdrops, and Bob with
 protocol-specific adaptations.
 
 ## Prerequisites
@@ -30,6 +30,7 @@ Detect the current EVM protocol from `package.json`:
 | `@sablier/flow`      | Flow     | `../sdk/deployments/flow`        |
 | `@sablier/lockup`    | Lockup   | `../sdk/deployments/lockup`      |
 | `@sablier/airdrops`  | Airdrops | `../sdk/deployments/airdrops`    |
+| `@sablier/bob`       | Bob      | `../sdk/deployments/bob`         |
 
 Extract version from `package.json` → `"version": "x.y.z"` → SDK version is `v<x.y>`
 
@@ -89,6 +90,8 @@ Track and carry forward between steps:
 | Flow     | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
 | Lockup   | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
 | Airdrops | `DeployDeterministicFactories.s.sol`        | `DeployFactories.s.sol`        |
+| Bob      | `DeployDeterministicBob.s.sol`              | `DeployBob.s.sol`              |
+| Bob      | `DeployDeterministicEscrow.s.sol`           | `DeployEscrow.s.sol`           |
 
 ## Output Summary
 

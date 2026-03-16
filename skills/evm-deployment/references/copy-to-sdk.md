@@ -106,6 +106,15 @@ get(chains.<chainName>.id, {
 }),
 ```
 
+### Bob Protocol
+
+```typescript
+get(chains.<chainName>.id, {
+  [manifest.SABLIER_BOB]: ["<BOB_ADDRESS>", <BLOCK_NUMBER>],
+  [manifest.SABLIER_ESCROW]: ["<ESCROW_ADDRESS>", <BLOCK_NUMBER>],
+}),
+```
+
 ## Extracting Values from Broadcast
 
 | Field          | Location in broadcast JSON                                          |

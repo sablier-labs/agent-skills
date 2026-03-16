@@ -78,6 +78,8 @@ FOUNDRY_PROFILE=optimized forge script \
 | Flow     | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
 | Lockup   | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
 | Airdrops | `DeployDeterministicFactories.s.sol`        | `DeployFactories.s.sol`        |
+| Bob      | `DeployDeterministicBob.s.sol`              | `DeployBob.s.sol`              |
+| Bob      | `DeployDeterministicEscrow.s.sol`           | `DeployEscrow.s.sol`           |
 
 ### Verification Flags
 
@@ -173,6 +175,13 @@ For other verifiers: https://getfoundry.sh/forge/reference/verify-contract
 | SablierFactoryMerkleLT        | Merkle LT airdrop factory        | Always deploy |
 | SablierFactoryMerkleVCA       | Merkle VCA airdrop factory       | Always deploy |
 | SablierFactoryMerkleExecute   | Merkle Execute airdrop factory   | Always deploy |
+
+### Bob
+
+| Contract      | Description     | Notes         |
+| ------------- | --------------- | ------------- |
+| SablierBob    | Bob contract    | Always deploy |
+| SablierEscrow | Escrow contract | Always deploy |
 
 ## Broadcast File Location
 
