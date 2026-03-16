@@ -166,12 +166,13 @@ For other verifiers: https://getfoundry.sh/forge/reference/verify-contract
 
 ### Airdrops
 
-| Contract                    | Description                    | Notes         |
-| --------------------------- | ------------------------------ | ------------- |
-| SablierFactoryMerkleInstant | Merkle Instant airdrop factory | Always deploy |
-| SablierFactoryMerkleLL      | Merkle LL airdrop factory      | Always deploy |
-| SablierFactoryMerkleLT      | Merkle LT airdrop factory      | Always deploy |
-| SablierFactoryMerkleVCA     | Merkle VCA airdrop factory     | Always deploy |
+| Contract                      | Description                      | Notes         |
+| ----------------------------- | -------------------------------- | ------------- |
+| SablierFactoryMerkleInstant   | Merkle Instant airdrop factory   | Always deploy |
+| SablierFactoryMerkleLL        | Merkle LL airdrop factory        | Always deploy |
+| SablierFactoryMerkleLT        | Merkle LT airdrop factory        | Always deploy |
+| SablierFactoryMerkleVCA       | Merkle VCA airdrop factory       | Always deploy |
+| SablierFactoryMerkleExecute   | Merkle Execute airdrop factory   | Always deploy |
 
 ## Broadcast File Location
 

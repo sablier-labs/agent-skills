@@ -105,11 +105,12 @@ After completion, provide:
 
 When deploying Airdrops test data, campaigns are created via factory:
 
-| Factory                       | Campaign Contract      |
-| ----------------------------- | ---------------------- |
-| `SablierFactoryMerkleInstant` | `SablierMerkleInstant` |
-| `SablierFactoryMerkleLL`      | `SablierMerkleLL`      |
-| `SablierFactoryMerkleLT`      | `SablierMerkleLT`      |
-| `SablierFactoryMerkleVCA`     | `SablierMerkleVCA`     |
+| Factory                        | Campaign Contract       |
+| ------------------------------ | ----------------------- |
+| `SablierFactoryMerkleInstant`  | `SablierMerkleInstant`  |
+| `SablierFactoryMerkleLL`       | `SablierMerkleLL`       |
+| `SablierFactoryMerkleLT`       | `SablierMerkleLT`       |
+| `SablierFactoryMerkleVCA`      | `SablierMerkleVCA`      |
+| `SablierFactoryMerkleExecute`  | `SablierMerkleExecute`  |
 
 Campaign addresses are returned in broadcast `returns` field, not `contractAddress`.
