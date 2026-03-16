@@ -146,8 +146,6 @@ For other verifiers: https://getfoundry.sh/forge/reference/verify-contract
 
 ## Manual Verification
 
-Use Playwright to check verification status on the explorer.
-
 ### Method 1: Forge CLI (preferred)
 
 ```bash
@@ -186,7 +184,7 @@ FOUNDRY_PROFILE=optimized forge verify-contract \
   --show-standard-json-input > <chain_name>_<Contract>.json
 ```
 
-Then via Playwright:
+Then manually on the explorer:
 
 1. Navigate to contract page on explorer
 2. Click "Verify & Publish"
