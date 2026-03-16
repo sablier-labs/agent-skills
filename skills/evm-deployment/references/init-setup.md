@@ -1,6 +1,6 @@
-# Deploy Test Streams
+# Initial Setup
 
-Create sample streams for testing. Applicable to Flow and Lockup protocols only.
+Create initial setup for deployed contracts. Includes Init scripts for Flow/Lockup and campaign creation for Airdrops.
 
 ## Prerequisites
 

@@ -57,11 +57,11 @@ Copy broadcast artifacts to SDK repository:
 - Update README.md with deployment info
 - Update deployments.ts with contract addresses
 
-### Step 3: Create Test Data (optional)
+### Step 3: Initial Setup (optional)
 
-Reference: `./references/deploy-streams.md`
+Reference: `./references/init-setup.md`
 
-For Flow and Lockup protocols only. Creates sample streams for testing:
+Creates initial setup for deployed contracts:
 
 - Mint or verify ERC20 token balance
 - Run Init.s.sol script to create test streams
