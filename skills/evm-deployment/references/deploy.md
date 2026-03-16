@@ -81,7 +81,9 @@ FOUNDRY_PROFILE=optimized forge script \
 
 ### Verification Flags
 
-For Etherscan-compatible explorers, append:
+#### Etherscan-compatible (preferred)
+
+For chains supported by Etherscan, append to the deploy command:
 
 ```bash
   --verify \
@@ -89,20 +91,54 @@ For Etherscan-compatible explorers, append:
   --etherscan-api-key $ETHERSCAN_API_KEY
 ```
 
-If foundry does not support the chain, use the following command:
+If Foundry does not support the chain natively, use the Etherscan V2 API:
 
 ```bash
 FOUNDRY_PROFILE=optimized forge verify-contract \
-<CONTRACT_ADDRESS> <CONTRACT_NAME> \
---verifier etherscan \
---verifier-url "https://api.etherscan.io/v2/api?chainid=<CHAIN_ID>" \
---etherscan-api-key $ETHERSCAN_API_KEY \
---watch
+  <CONTRACT_ADDRESS> <CONTRACT_NAME> \
+  --verifier etherscan \
+  --verifier-url "https://api.etherscan.io/v2/api?chainid=<CHAIN_ID>" \
+  --etherscan-api-key $ETHERSCAN_API_KEY \
+  --watch
 ```
 
-For other verifiers: https://getfoundry.sh/forge/reference/verify-contract
+**Note:** Supported Etherscan chains: https://docs.etherscan.io/supported-chains
 
-**Note:** Prefer Etherscan. Supported chains: https://docs.etherscan.io/supported-chains
+#### Blockscout-compatible
+
+For chains using Blockscout explorers, append to the deploy command:
+
+```bash
+  --verify \
+  --verifier blockscout \
+  --verifier-url "${BLOCKSCOUT_URL[$CHAIN]}" \
+  --etherscan-api-key "verifyContract"
+```
+
+Or verify after deployment:
+
+```bash
+FOUNDRY_PROFILE=optimized forge verify-contract \
+  <CONTRACT_ADDRESS> <CONTRACT_NAME> \
+  --verifier blockscout \
+  --verifier-url "${BLOCKSCOUT_URL[$CHAIN]}" \
+  --etherscan-api-key "verifyContract" \
+  --watch
+```
+
+Known Blockscout chains:
+
+| Chain     | Verifier URL                                                       |
+| --------- | ------------------------------------------------------------------ |
+| avalanche | `https://api.snowtrace.io/`                                       |
+| chiliz    | `https://api.routescan.io/v2/network/mainnet/evm/88888/`          |
+| lightlink | `https://phoenix.lightlink.io/api/`                                |
+| mode      | `https://explorer.mode.network/api/`                               |
+| morph     | `https://explorer-api.morphl2.io/api/`                             |
+| sophon    | `https://explorer.sophon.xyz/api/`                                 |
+| superseed | `https://explorer.superseed.xyz/api/`                              |
+
+For other verifiers: https://getfoundry.sh/forge/reference/verify-contract
 
 ## Deployed Contracts by Protocol
 
