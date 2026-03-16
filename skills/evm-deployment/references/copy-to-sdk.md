@@ -90,7 +90,7 @@ get(chains.<chainName>.id, {
 get(chains.<chainName>.id, {
   [manifest.LOCKUP_NFT_DESCRIPTOR]: "<NFT_DESCRIPTOR_ADDRESS>",
   [manifest.SABLIER_LOCKUP]: ["<LOCKUP_ADDRESS>", <BLOCK_NUMBER>],
-  [manifest.SABLIER_BATCH_LOCKUP]: "<BATCH_LOCKUP_ADDRESS>", // if deployed
+  [manifest.SABLIER_BATCH_LOCKUP]: "<BATCH_LOCKUP_ADDRESS>",
 }),
 ```
 
