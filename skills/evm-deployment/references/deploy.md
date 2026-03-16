@@ -71,13 +71,13 @@ FOUNDRY_PROFILE=optimized forge script \
 
 ### Script Names by Protocol
 
-| Protocol     | Deterministic                               | Non-deterministic              |
-| ------------ | ------------------------------------------- | ------------------------------ |
-| Comptroller  | `DeployDeterministicComptrollerProxy.s.sol` | `DeployComptrollerProxy.s.sol` |
-| ERC20 Faucet | `DeployDeterministicERC20Faucet.s.sol`      | `DeployERC20Faucet.s.sol`      |
-| Flow         | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
-| Lockup       | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
-| Airdrops     | `DeployDeterministicFactories.s.sol`        | `DeployFactories.s.sol`        |
+| Protocol | Deterministic                               | Non-deterministic              |
+| -------- | ------------------------------------------- | ------------------------------ |
+| Utils    | `DeployDeterministicComptrollerProxy.s.sol` | `DeployComptrollerProxy.s.sol` |
+| Utils    | `DeployDeterministicERC20Faucet.s.sol`      | `DeployERC20Faucet.s.sol`      |
+| Flow     | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
+| Lockup   | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
+| Airdrops | `DeployDeterministicFactories.s.sol`        | `DeployFactories.s.sol`        |
 
 ### Verification Flags
 
@@ -106,7 +106,7 @@ For other verifiers: https://getfoundry.sh/forge/reference/verify-contract
 
 ## Deployed Contracts by Protocol
 
-### Comptroller
+### Utils
 
 | Contract           | Description               | Notes                                                                                                                |
 | ------------------ | ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -224,7 +224,6 @@ Root cause: `node_modules` drift from deployment state causes different compilat
 Comptroller uses ERC1967 proxy pattern. Verify **both** contracts:
 
 1. **Find addresses** in broadcast JSON - look for 3 transactions:
-
    - Implementation deployment
    - Proxy deployment
    - Initialize call
@@ -276,7 +275,6 @@ Contracts created via factory (CREATE2) need constructor args extracted from bro
    ```
 
    Metadata hash pattern: `64736f6c6343` = "solcC" + version bytes + `0033`
-
    - 0.8.29: `64736f6c634300081d0033`
    - 0.8.28: `64736f6c634300081c0033`
 

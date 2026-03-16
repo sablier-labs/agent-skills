@@ -56,16 +56,16 @@ And to `Mainnets` table:
 | <ChainName> | No Salt |
 ```
 
-Note: For Comptroller, the README.md follows a different structure. Always refer to the README.md in deployment
+Note: For Utils (Comptroller), the README.md follows a different structure. Always refer to the README.md in deployment
 directory for the specific protocol.
 
 ## Step 3: Update deployments.ts
 
 Edit `<SDK_PATH>/src/evm/releases/<protocol>/<version>/deployments.ts`
 
-Note: For Comptroller, edit `<SDK_PATH>/src/evm/comptroller.ts`
+Note: For Utils (Comptroller), edit `<SDK_PATH>/src/evm/comptroller.ts`
 
-### Comptroller Protocol
+### Utils Protocol (Comptroller)
 
 ```typescript
 get(chains.<chainName>.id, {

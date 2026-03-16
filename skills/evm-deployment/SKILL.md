@@ -24,12 +24,12 @@ forge -V
 
 Detect the current EVM protocol from `package.json`:
 
-| Package Name         | Protocol    | SDK Path                         |
-| -------------------- | ----------- | -------------------------------- |
-| `@sablier/evm-utils` | Comptroller | `../sdk/deployments/comptroller` |
-| `@sablier/flow`      | Flow        | `../sdk/deployments/flow`        |
-| `@sablier/lockup`    | Lockup      | `../sdk/deployments/lockup`      |
-| `@sablier/airdrops`  | Airdrops    | `../sdk/deployments/airdrops`    |
+| Package Name         | Protocol | SDK Path                         |
+| -------------------- | -------- | -------------------------------- |
+| `@sablier/evm-utils` | Utils    | `../sdk/deployments/comptroller` |
+| `@sablier/flow`      | Flow     | `../sdk/deployments/flow`        |
+| `@sablier/lockup`    | Lockup   | `../sdk/deployments/lockup`      |
+| `@sablier/airdrops`  | Airdrops | `../sdk/deployments/airdrops`    |
 
 Extract version from `package.json` → `"version": "x.y.z"` → SDK version is `v<x.y>`
 
@@ -82,12 +82,13 @@ Track and carry forward between steps:
 
 ## Protocol-Specific Scripts
 
-| Protocol    | Deterministic Script                        | Non-deterministic Script       |
-| ----------- | ------------------------------------------- | ------------------------------ |
-| Comptroller | `DeployDeterministicComptrollerProxy.s.sol` | `DeployComptrollerProxy.s.sol` |
-| Flow        | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
-| Lockup      | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
-| Airdrops    | `DeployDeterministicFactories.s.sol`        | `DeployFactories.s.sol`        |
+| Protocol | Deterministic Script                        | Non-deterministic Script       |
+| -------- | ------------------------------------------- | ------------------------------ |
+| Utils    | `DeployDeterministicComptrollerProxy.s.sol` | `DeployComptrollerProxy.s.sol` |
+| Utils    | `DeployDeterministicERC20Faucet.s.sol`      | `DeployERC20Faucet.s.sol`      |
+| Flow     | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
+| Lockup   | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
+| Airdrops | `DeployDeterministicFactories.s.sol`        | `DeployFactories.s.sol`        |
 
 ## Output Summary
 
