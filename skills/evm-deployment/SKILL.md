@@ -1,11 +1,11 @@
 ---
 name: evm-deployment
-description: Deploy Sablier EVM contracts (Comptroller, ERC20 Faucet, Flow, Lockup, Airdrops) with full workflow automation. This skill should be used when the user asks to "deploy", "deploy protocol", "deploy to chain", or mentions deployment-related tasks. Handles contract deployment, explorer verification, SDK updates, and sample data creation through Init script.
+description: Deploy Sablier EVM contracts (Utils, Flow, Lockup, Airdrops, Bob) with full workflow automation. This skill should be used when the user asks to "deploy", "deploy protocol", "deploy to chain", or mentions deployment-related tasks. Handles contract deployment, explorer verification, SDK updates, and initial setup through Init scripts.
 ---
 
 ## Overview
 
-End-to-end deployment workflow for Sablier EVM contracts. Supports Comptroller, Flow, Lockup, and Airdrops with
+End-to-end deployment workflow for Sablier EVM contracts. Supports Utils, Flow, Lockup, Airdrops, and Bob with
 protocol-specific adaptations.
 
 ## Prerequisites
@@ -24,12 +24,13 @@ forge -V
 
 Detect the current EVM protocol from `package.json`:
 
-| Package Name         | Protocol    | SDK Path                         |
-| -------------------- | ----------- | -------------------------------- |
-| `@sablier/evm-utils` | Comptroller | `../sdk/deployments/comptroller` |
-| `@sablier/flow`      | Flow        | `../sdk/deployments/flow`        |
-| `@sablier/lockup`    | Lockup      | `../sdk/deployments/lockup`      |
-| `@sablier/airdrops`  | Airdrops    | `../sdk/deployments/airdrops`    |
+| Package Name         | Protocol | SDK Path                         |
+| -------------------- | -------- | -------------------------------- |
+| `@sablier/evm-utils` | Utils    | `../sdk/deployments/comptroller` |
+| `@sablier/flow`      | Flow     | `../sdk/deployments/flow`        |
+| `@sablier/lockup`    | Lockup   | `../sdk/deployments/lockup`      |
+| `@sablier/airdrops`  | Airdrops | `../sdk/deployments/airdrops`    |
+| `@sablier/bob`       | Bob      | `../sdk/deployments/bob`         |
 
 Extract version from `package.json` → `"version": "x.y.z"` → SDK version is `v<x.y>`
 
@@ -57,11 +58,11 @@ Copy broadcast artifacts to SDK repository:
 - Update README.md with deployment info
 - Update deployments.ts with contract addresses
 
-### Step 3: Create Test Data (optional)
+### Step 3: Initial Setup (optional)
 
-Reference: `./references/deploy-streams.md`
+Reference: `./references/init-setup.md`
 
-For Flow and Lockup protocols only. Creates sample streams for testing:
+Creates initial setup for deployed contracts:
 
 - Mint or verify ERC20 token balance
 - Run Init.s.sol script to create test streams
@@ -82,12 +83,15 @@ Track and carry forward between steps:
 
 ## Protocol-Specific Scripts
 
-| Protocol    | Deterministic Script                        | Non-deterministic Script       |
-| ----------- | ------------------------------------------- | ------------------------------ |
-| Comptroller | `DeployDeterministicComptrollerProxy.s.sol` | `DeployComptrollerProxy.s.sol` |
-| Flow        | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
-| Lockup      | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
-| Airdrops    | `DeployDeterministicFactories.s.sol`        | `DeployFactories.s.sol`        |
+| Protocol | Deterministic Script                        | Non-deterministic Script       |
+| -------- | ------------------------------------------- | ------------------------------ |
+| Utils    | `DeployDeterministicComptrollerProxy.s.sol` | `DeployComptrollerProxy.s.sol` |
+| Utils    | `DeployDeterministicERC20Faucet.s.sol`      | `DeployERC20Faucet.s.sol`      |
+| Flow     | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
+| Lockup   | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
+| Airdrops | `DeployDeterministicFactories.s.sol`        | `DeployFactories.s.sol`        |
+| Bob      | `DeployDeterministicBob.s.sol`              | `DeployBob.s.sol`              |
+| Bob      | `DeployDeterministicEscrow.s.sol`           | `DeployEscrow.s.sol`           |
 
 ## Output Summary
 
@@ -104,11 +108,12 @@ After completion, provide:
 
 When deploying Airdrops test data, campaigns are created via factory:
 
-| Factory                       | Campaign Contract      |
-| ----------------------------- | ---------------------- |
-| `SablierFactoryMerkleInstant` | `SablierMerkleInstant` |
-| `SablierFactoryMerkleLL`      | `SablierMerkleLL`      |
-| `SablierFactoryMerkleLT`      | `SablierMerkleLT`      |
-| `SablierFactoryMerkleVCA`     | `SablierMerkleVCA`     |
+| Factory                        | Campaign Contract       |
+| ------------------------------ | ----------------------- |
+| `SablierFactoryMerkleInstant`  | `SablierMerkleInstant`  |
+| `SablierFactoryMerkleLL`       | `SablierMerkleLL`       |
+| `SablierFactoryMerkleLT`       | `SablierMerkleLT`       |
+| `SablierFactoryMerkleVCA`      | `SablierMerkleVCA`      |
+| `SablierFactoryMerkleExecute`  | `SablierMerkleExecute`  |
 
 Campaign addresses are returned in broadcast `returns` field, not `contractAddress`.

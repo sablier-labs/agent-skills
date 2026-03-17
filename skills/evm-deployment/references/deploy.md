@@ -71,17 +71,21 @@ FOUNDRY_PROFILE=optimized forge script \
 
 ### Script Names by Protocol
 
-| Protocol     | Deterministic                               | Non-deterministic              |
-| ------------ | ------------------------------------------- | ------------------------------ |
-| Comptroller  | `DeployDeterministicComptrollerProxy.s.sol` | `DeployComptrollerProxy.s.sol` |
-| ERC20 Faucet | `DeployDeterministicERC20Faucet.s.sol`      | `DeployERC20Faucet.s.sol`      |
-| Flow         | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
-| Lockup       | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
-| Airdrops     | `DeployDeterministicFactories.s.sol`        | `DeployFactories.s.sol`        |
+| Protocol | Deterministic                               | Non-deterministic              |
+| -------- | ------------------------------------------- | ------------------------------ |
+| Utils    | `DeployDeterministicComptrollerProxy.s.sol` | `DeployComptrollerProxy.s.sol` |
+| Utils    | `DeployDeterministicERC20Faucet.s.sol`      | `DeployERC20Faucet.s.sol`      |
+| Flow     | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
+| Lockup   | `DeployDeterministicProtocol.s.sol`         | `DeployProtocol.s.sol`         |
+| Airdrops | `DeployDeterministicFactories.s.sol`        | `DeployFactories.s.sol`        |
+| Bob      | `DeployDeterministicBob.s.sol`              | `DeployBob.s.sol`              |
+| Bob      | `DeployDeterministicEscrow.s.sol`           | `DeployEscrow.s.sol`           |
 
 ### Verification Flags
 
-For Etherscan-compatible explorers, append:
+#### Etherscan-compatible (preferred)
+
+For chains supported by Etherscan, append to the deploy command:
 
 ```bash
   --verify \
@@ -89,29 +93,99 @@ For Etherscan-compatible explorers, append:
   --etherscan-api-key $ETHERSCAN_API_KEY
 ```
 
-If foundry does not support the chain, use the following command:
+If Foundry does not support the chain natively, use the Etherscan V2 API:
 
 ```bash
 FOUNDRY_PROFILE=optimized forge verify-contract \
-<CONTRACT_ADDRESS> <CONTRACT_NAME> \
---verifier etherscan \
---verifier-url "https://api.etherscan.io/v2/api?chainid=<CHAIN_ID>" \
---etherscan-api-key $ETHERSCAN_API_KEY \
---watch
+  <CONTRACT_ADDRESS> <CONTRACT_NAME> \
+  --verifier etherscan \
+  --verifier-url "https://api.etherscan.io/v2/api?chainid=<CHAIN_ID>" \
+  --etherscan-api-key $ETHERSCAN_API_KEY \
+  --watch
 ```
+
+**Note:** Supported Etherscan chains: https://docs.etherscan.io/supported-chains
+
+#### Blockscout-compatible
+
+For chains using Blockscout explorers, append to the deploy command:
+
+```bash
+  --verify \
+  --verifier blockscout \
+  --verifier-url "${BLOCKSCOUT_URL[$CHAIN]}" \
+  --etherscan-api-key "verifyContract"
+```
+
+Or verify after deployment:
+
+```bash
+FOUNDRY_PROFILE=optimized forge verify-contract \
+  <CONTRACT_ADDRESS> <CONTRACT_NAME> \
+  --verifier blockscout \
+  --verifier-url "${BLOCKSCOUT_URL[$CHAIN]}" \
+  --etherscan-api-key "verifyContract" \
+  --watch
+```
+
+Known Blockscout chains:
+
+| Chain     | Verifier URL                                                       |
+| --------- | ------------------------------------------------------------------ |
+| avalanche | `https://api.snowtrace.io/`                                       |
+| chiliz    | `https://api.routescan.io/v2/network/mainnet/evm/88888/`          |
+| lightlink | `https://phoenix.lightlink.io/api/`                                |
+| mode      | `https://explorer.mode.network/api/`                               |
+| morph     | `https://explorer-api.morphl2.io/api/`                             |
+| sophon    | `https://explorer.sophon.xyz/api/`                                 |
+| superseed | `https://explorer.superseed.xyz/api/`                              |
 
 For other verifiers: https://getfoundry.sh/forge/reference/verify-contract
 
-**Note:** Prefer Etherscan. Supported chains: https://docs.etherscan.io/supported-chains
-
 ## Deployed Contracts by Protocol
 
-### Comptroller
+### Utils
 
 | Contract           | Description               | Notes                                                                                                                |
 | ------------------ | ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | SablierComptroller | Core comptroller contract | Skip if already deployed, this can be verified through `getComptroller` in `BaseScript.sol` in `@sablier/evm-utils`. |
 | ERC20 Faucet       | ERC20 token faucet        | Always deploy                                                                                                        |
+
+#### Comptroller Upgrade
+
+To upgrade an existing Comptroller proxy to a new implementation, use `UpgradeComptrollerProxy.s.sol`. This script
+deploys a new implementation and sets it on the existing proxy, with a storage layout collision check against the
+previous version.
+
+**Steps:**
+
+1. **Flatten the previous Comptroller version** (e.g., v1.0 from `evm-utils` repo):
+
+   ```bash
+   forge flatten src/SablierComptroller.sol > SablierComptrollerV10.sol
+   ```
+
+2. **Place the flattened file** in `src/legacy/` directory of the current repo.
+
+3. **Build and run the upgrade script**:
+
+   ```bash
+   just build
+   forge script scripts/solidity/UpgradeComptrollerProxy.s.sol:UpgradeComptrollerProxy \
+     --broadcast \
+     --rpc-url <chain_name> \
+     --private-key $PRIVATE_KEY \
+     -vvv
+   ```
+
+The script will:
+- Deploy a new `SablierComptroller` implementation
+- Set it as the implementation of the existing proxy (via `Upgrades.upgradeProxy`)
+- Perform storage layout comparison against `SablierComptrollerV10.sol:SablierComptroller`
+- Return the new implementation address
+
+**Note:** The `referenceContract` in the script must match the flattened file name. The script uses
+`opts.unsafeAllow = "constructor"` to bypass the constructor check for the implementation.
 
 ### Flow
 
@@ -130,12 +204,20 @@ For other verifiers: https://getfoundry.sh/forge/reference/verify-contract
 
 ### Airdrops
 
-| Contract                    | Description                    | Notes         |
-| --------------------------- | ------------------------------ | ------------- |
-| SablierFactoryMerkleInstant | Merkle Instant airdrop factory | Always deploy |
-| SablierFactoryMerkleLL      | Merkle LL airdrop factory      | Always deploy |
-| SablierFactoryMerkleLT      | Merkle LT airdrop factory      | Always deploy |
-| SablierFactoryMerkleVCA     | Merkle VCA airdrop factory     | Always deploy |
+| Contract                      | Description                      | Notes         |
+| ----------------------------- | -------------------------------- | ------------- |
+| SablierFactoryMerkleInstant   | Merkle Instant airdrop factory   | Always deploy |
+| SablierFactoryMerkleLL        | Merkle LL airdrop factory        | Always deploy |
+| SablierFactoryMerkleLT        | Merkle LT airdrop factory        | Always deploy |
+| SablierFactoryMerkleVCA       | Merkle VCA airdrop factory       | Always deploy |
+| SablierFactoryMerkleExecute   | Merkle Execute airdrop factory   | Always deploy |
+
+### Bob
+
+| Contract      | Description     | Notes         |
+| ------------- | --------------- | ------------- |
+| SablierBob    | Bob contract    | Always deploy |
+| SablierEscrow | Escrow contract | Always deploy |
 
 ## Broadcast File Location
 
@@ -145,8 +227,6 @@ For other verifiers: https://getfoundry.sh/forge/reference/verify-contract
 | Non-deterministic | `broadcast/<NON_DETERMINISTIC_SCRIPT>/<CHAIN_ID>/run-latest.json` |
 
 ## Manual Verification
-
-Use Playwright to check verification status on the explorer.
 
 ### Method 1: Forge CLI (preferred)
 
@@ -186,7 +266,7 @@ FOUNDRY_PROFILE=optimized forge verify-contract \
   --show-standard-json-input > <chain_name>_<Contract>.json
 ```
 
-Then via Playwright:
+Then manually on the explorer:
 
 1. Navigate to contract page on explorer
 2. Click "Verify & Publish"
@@ -224,7 +304,6 @@ Root cause: `node_modules` drift from deployment state causes different compilat
 Comptroller uses ERC1967 proxy pattern. Verify **both** contracts:
 
 1. **Find addresses** in broadcast JSON - look for 3 transactions:
-
    - Implementation deployment
    - Proxy deployment
    - Initialize call
@@ -276,7 +355,6 @@ Contracts created via factory (CREATE2) need constructor args extracted from bro
    ```
 
    Metadata hash pattern: `64736f6c6343` = "solcC" + version bytes + `0033`
-
    - 0.8.29: `64736f6c634300081d0033`
    - 0.8.28: `64736f6c634300081c0033`
 

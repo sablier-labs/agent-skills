@@ -1,6 +1,6 @@
-# Deploy Test Streams
+# Initial Setup
 
-Create sample streams for testing. Applicable to Flow and Lockup protocols only.
+Create initial setup for deployed contracts. Includes Init scripts for Flow/Lockup and campaign creation for Airdrops.
 
 ## Prerequisites
 
@@ -178,15 +178,6 @@ Campaigns are created via factory (CREATE2). Constructor args are embedded in th
      --constructor-args <EXTRACTED_ARGS> \
      --watch
    ```
-
-### Campaign Contract Names
-
-| Factory                       | Campaign Contract      |
-| ----------------------------- | ---------------------- |
-| `SablierFactoryMerkleInstant` | `SablierMerkleInstant` |
-| `SablierFactoryMerkleLL`      | `SablierMerkleLL`      |
-| `SablierFactoryMerkleLT`      | `SablierMerkleLT`      |
-| `SablierFactoryMerkleVCA`     | `SablierMerkleVCA`     |
 
 ### Notes
 

@@ -56,16 +56,16 @@ And to `Mainnets` table:
 | <ChainName> | No Salt |
 ```
 
-Note: For Comptroller, the README.md follows a different structure. Always refer to the README.md in deployment
+Note: For Utils (Comptroller), the README.md follows a different structure. Always refer to the README.md in deployment
 directory for the specific protocol.
 
 ## Step 3: Update deployments.ts
 
 Edit `<SDK_PATH>/src/evm/releases/<protocol>/<version>/deployments.ts`
 
-Note: For Comptroller, edit `<SDK_PATH>/src/evm/comptroller.ts`
+Note: For Utils (Comptroller), edit `<SDK_PATH>/src/evm/comptroller.ts`
 
-### Comptroller Protocol
+### Utils Protocol (Comptroller)
 
 ```typescript
 get(chains.<chainName>.id, {
@@ -90,7 +90,7 @@ get(chains.<chainName>.id, {
 get(chains.<chainName>.id, {
   [manifest.LOCKUP_NFT_DESCRIPTOR]: "<NFT_DESCRIPTOR_ADDRESS>",
   [manifest.SABLIER_LOCKUP]: ["<LOCKUP_ADDRESS>", <BLOCK_NUMBER>],
-  [manifest.SABLIER_BATCH_LOCKUP]: "<BATCH_LOCKUP_ADDRESS>", // if deployed
+  [manifest.SABLIER_BATCH_LOCKUP]: "<BATCH_LOCKUP_ADDRESS>",
 }),
 ```
 
@@ -98,7 +98,20 @@ get(chains.<chainName>.id, {
 
 ```typescript
 get(chains.<chainName>.id, {
-  [manifest.SABLIER_MERKLE_FACTORY]: ["<FACTORY_ADDRESS>", <BLOCK_NUMBER>],
+  [manifest.SABLIER_FACTORY_MERKLE_INSTANT]: ["<FACTORY_MERKLE_INSTANT_ADDRESS>", <BLOCK_NUMBER>],
+  [manifest.SABLIER_FACTORY_MERKLE_LL]: ["<FACTORY_MERKLE_LL_ADDRESS>", <BLOCK_NUMBER>],
+  [manifest.SABLIER_FACTORY_MERKLE_LT]: ["<FACTORY_MERKLE_LT_ADDRESS>", <BLOCK_NUMBER>],
+  [manifest.SABLIER_FACTORY_MERKLE_VCA]: ["<FACTORY_MERKLE_VCA_ADDRESS>", <BLOCK_NUMBER>],
+  [manifest.SABLIER_FACTORY_MERKLE_EXECUTE]: ["<FACTORY_MERKLE_EXECUTE_ADDRESS>", <BLOCK_NUMBER>],
+}),
+```
+
+### Bob Protocol
+
+```typescript
+get(chains.<chainName>.id, {
+  [manifest.SABLIER_BOB]: ["<BOB_ADDRESS>", <BLOCK_NUMBER>],
+  [manifest.SABLIER_ESCROW]: ["<ESCROW_ADDRESS>", <BLOCK_NUMBER>],
 }),
 ```
 

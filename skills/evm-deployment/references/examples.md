@@ -48,9 +48,9 @@ FOUNDRY_PROFILE=optimized forge build
 FOUNDRY_PROFILE=optimized forge verify-contract ...
 ```
 
-## Proxy Pattern Verification (Comptroller)
+## Proxy Pattern Verification (Utils — Comptroller)
 
-Comptroller uses ERC1967 proxy. The broadcast shows 3 transactions:
+Comptroller (Utils protocol) uses ERC1967 proxy. The broadcast shows 3 transactions:
 
 ```json
 {
@@ -185,7 +185,7 @@ FOUNDRY_PROFILE=optimized forge verify-contract \
 | FlowNFTDescriptor | `0xf51BB8bd1cfc7C890dB68c39dCCA67CAd7810Ce4` |
 | SablierFlow       | `0x0340a829b6dC3aDF7710a5bAF1970914af4977f5` |
 
-### Comptroller
+### Utils (Comptroller)
 
 | Contract       | Address                                      |
 | -------------- | -------------------------------------------- |
