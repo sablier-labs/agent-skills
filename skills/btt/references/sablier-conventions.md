@@ -115,6 +115,40 @@ StreamedAmountOf_Integration_Concrete_Test
    └── ...
 ```
 
+### Price Gated (LPG) Model
+
+LPG streams unlock tokens based on a target price via Chainlink oracle. Tests live in their own directory
+`lockup-price-gated/` and use `_Lockup_PriceGated_` naming convention.
+
+LPG-specific BTT terminology:
+
+| Concept                | BTT Branch                           |
+| ---------------------- | ------------------------------------ |
+| Price below target     | `when latest price below target`     |
+| Price not below target | `when latest price not below target` |
+| End time in future     | `given end time in future`           |
+| End time not in future | `given end time not in future`       |
+
+LPG Withdraw happy path:
+
+```
+Withdraw_Lockup_PriceGated_Integration_Concrete_Test
+├── given end time in future
+│  ├── when latest price below target
+│  │  └── it should revert
+│  └── when latest price not below target
+│     ├── when amount less than deposit
+│     │  └── it should revert
+│     └── when amount equals deposit
+│        ├── it should make the withdrawal
+│        ├── it should mark the stream as depleted
+│        └── it should emit {WithdrawFromLockupStream} and {MetadataUpdate} events
+└── given end time not in future
+   ├── it should make the withdrawal
+   ├── it should mark the stream as depleted
+   └── it should emit {WithdrawFromLockupStream} and {MetadataUpdate} events
+```
+
 ## Running Bulloak in Sablier Repos
 
 ```bash

@@ -77,7 +77,7 @@ FOUNDRY_PROFILE=optimized forge script scripts/solidity/Init.s.sol:Init \
 
 **What Init.s.sol does (Lockup):**
 
-- Creates various stream types (Linear, Dynamic, Tranched)
+- Creates various stream types (Linear with `granularity`, Dynamic, Tranched)
 - Tests different cliff configurations
 - Creates cancelable and non-cancelable streams
 
@@ -93,12 +93,13 @@ Airdrops uses campaign creation scripts instead of Init scripts.
 
 ### Campaign Scripts
 
-| Script                      | Function Signature                                                         | Description            |
-| --------------------------- | -------------------------------------------------------------------------- | ---------------------- |
-| `CreateMerkleInstant.s.sol` | `run(SablierFactoryMerkleInstant factory)`                                 | Instant token airdrops |
-| `CreateMerkleLL.s.sol`      | `run(SablierFactoryMerkleLL factory, ISablierLockup lockup, IERC20 token)` | Linear vesting         |
-| `CreateMerkleLT.s.sol`      | `run(SablierFactoryMerkleLT factory, ISablierLockup lockup, IERC20 token)` | Tranched vesting       |
-| `CreateMerkleVCA.s.sol`     | `run(SablierFactoryMerkleVCA factory)`                                     | VCA vesting            |
+| Script                       | Function Signature                                                         | Description            |
+| ---------------------------- | -------------------------------------------------------------------------- | ---------------------- |
+| `CreateMerkleInstant.s.sol`  | `run(SablierFactoryMerkleInstant factory)`                                 | Instant token airdrops |
+| `CreateMerkleLL.s.sol`       | `run(SablierFactoryMerkleLL factory, ISablierLockup lockup, IERC20 token)` | Linear vesting         |
+| `CreateMerkleLT.s.sol`       | `run(SablierFactoryMerkleLT factory, ISablierLockup lockup, IERC20 token)` | Tranched vesting       |
+| `CreateMerkleVCA.s.sol`      | `run(SablierFactoryMerkleVCA factory)`                                     | VCA vesting            |
+| `CreateMerkleExecute.s.sol`  | `run(SablierFactoryMerkleExecute factory)`                                 | Execute on claim       |
 
 ### Pre-Deployment Configuration
 
@@ -108,14 +109,24 @@ Edit the script to set campaign parameters:
 // Required for all campaigns
 params.campaignName = "Campaign Name";
 params.campaignStartTime = uint40(block.timestamp);
+params.claimType = ClaimType.DEFAULT; // or ATTEST, EXECUTE
 params.expiration = uint40(block.timestamp + 30 days);
 params.initialAdmin = <ADMIN_ADDRESS>;
 params.ipfsCID = "QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR";
 params.merkleRoot = 0x0000000000000000000000000000000000000000000000000000000000000000;
 params.token = IERC20(<TOKEN_ADDRESS>);
+
+// MerkleLL only:
+params.granularity = 0; // 0 = sentinel for 1 second
 ```
 
-**Note:** For LL/LT campaigns, token is passed as function argument, not in params.
+**Notes:**
+
+- For LL/LT campaigns, token is passed as function argument, not in params.
+- All campaigns require `ClaimType` (DEFAULT, ATTEST, or EXECUTE) which controls which claim functions are enabled.
+- MerkleLL campaigns require `granularity` (uint40) for configurable unlock step sizes (aligns with Lockup v4.0).
+- MerkleVCA: `aggregateAmount` is set in `ConstructorParams`, not as a separate function argument.
+- MerkleExecute: requires `selector` (bytes4) and `target` (address) for the function to call on claim.
 
 ### Deploy Campaign
 
