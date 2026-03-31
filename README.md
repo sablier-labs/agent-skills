@@ -2,20 +2,23 @@
 
 A collection of agent skills for AI coding assistants developed by Sablier Labs.
 
+> [!NOTE]
+> These are internal skills used at Sablier Labs. Looking to create Sablier streams? See [sablier-labs/sablier-skills](https://github.com/sablier-labs/sablier-skills) for user-facing skills.
+
 ## Installation
 
 ```bash
 # Add all skills from this repository
 npx skills add sablier-labs/agent-skills
 
-# Add a specific skill (e.g., vitest)
-npx skills add sablier-labs/agent-skills -s vitest
+# Add a specific skill (e.g., coingecko-api)
+npx skills add sablier-labs/agent-skills -s coingecko-api
 
 # Add globally for all projects
-npx skills add sablier-labs/agent-skills -s vitest -g
+npx skills add sablier-labs/agent-skills -s coingecko-api -g
 
 # Target a specific agent (claude-code, cursor, cline, codex, etc.)
-npx skills add sablier-labs/agent-skills -s vitest -a claude-code
+npx skills add sablier-labs/agent-skills -s coingecko-api -a claude-code
 
 # List available skills before installing
 npx skills add sablier-labs/agent-skills -l
@@ -30,9 +33,6 @@ npx skills add sablier-labs/agent-skills -l
 | `sablier-design` | Sablier dark-theme aesthetic and production-grade React interfaces             |
 | `sablier-icon`   | Recolor the Sablier icon SVG to any brand or hex color, with PNG/JPG export    |
 | `sablier-writing` | Content creation with Sablier brand voice: blog posts, case studies, X/Twitter |
-
-> [!TIP]
-> Looking to create vesting streams or learn about the Sablier protocol? See [sablier-labs/sablier-skills](https://github.com/sablier-labs/sablier-skills) for user-facing skills.
 
 ### Development
 
