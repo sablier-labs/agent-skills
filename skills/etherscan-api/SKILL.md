@@ -170,7 +170,6 @@ Specify the `chainid` parameter to query different blockchains.
 | Polygon      | `137`    |
 | Arbitrum One | `42161`  |
 | Linea        | `59144`  |
-| Scroll       | `534352` |
 | zkSync       | `324`    |
 
 ### Example: Polygon Query

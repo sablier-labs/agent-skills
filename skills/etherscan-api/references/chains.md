@@ -11,7 +11,6 @@ Source: <https://docs.etherscan.io/etherscan-v2/getting-started/supported-chains
 | Arbitrum One     | `42161`  |               |
 | Arbitrum Nova    | `42170`  |               |
 | Linea Mainnet    | `59144`  |               |
-| Scroll Mainnet   | `534352` |               |
 | zkSync Mainnet   | `324`    |               |
 | Mantle Mainnet   | `5000`   |               |
 | Blast Mainnet    | `81457`  |               |
@@ -80,7 +79,6 @@ The following chains require a paid Etherscan plan:
 | OP Sepolia         | `11155420`  |
 | opBNB Testnet      | `5611`      |
 | Polygon Amoy       | `80002`     |
-| Scroll Sepolia     | `534351`    |
 | Sei Testnet        | `1328`      |
 | Sonic Testnet      | `14601`     |
 | Stable Testnet     | `2201`      |
