@@ -50,6 +50,7 @@ npx skills add sablier-labs/agent-skills -l
 | `coingecko-api`          | CoinGecko API for token metadata, logos, and price queries                     |
 | `etherscan-api`          | Etherscan API V2 for blockchain queries                                        |
 | `evm-deployment`         | EVM smart contract deployment patterns                                         |
+| `evm-explorers`          | Default block explorer URL and name for every chain shipped by `sablier`       |
 | `btt`                    | Bulloak tree specifications for smart contract integration tests               |
 | `cli-forge`              | Foundry tests, fuzz tests, fork tests, invariant tests, and deployment scripts |
 | `viem`                   | Viem TypeScript interface for Ethereum interactions                            |
