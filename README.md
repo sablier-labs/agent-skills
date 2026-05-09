@@ -11,14 +11,14 @@ A collection of agent skills for AI coding assistants developed by Sablier Labs.
 # Add all skills from this repository
 npx skills add sablier-labs/agent-skills
 
-# Add a specific skill (e.g., coingecko-api)
-npx skills add sablier-labs/agent-skills -s coingecko-api
+# Add a specific skill (e.g., evm-chains)
+npx skills add sablier-labs/agent-skills -s evm-chains
 
 # Add globally for all projects
-npx skills add sablier-labs/agent-skills -s coingecko-api -g
+npx skills add sablier-labs/agent-skills -s evm-chains -g
 
 # Target a specific agent (claude-code, cursor, cline, codex, etc.)
-npx skills add sablier-labs/agent-skills -s coingecko-api -a claude-code
+npx skills add sablier-labs/agent-skills -s evm-chains -a claude-code
 
 # List available skills before installing
 npx skills add sablier-labs/agent-skills -l
@@ -47,8 +47,6 @@ npx skills add sablier-labs/agent-skills -l
 
 | Skill                    | Description                                                                    |
 | ------------------------ | ------------------------------------------------------------------------------ |
-| `coingecko-api`          | CoinGecko API for token metadata, logos, and price queries                     |
-| `etherscan-api`          | Etherscan API V2 for blockchain queries                                        |
 | `evm-deployment`         | EVM smart contract deployment patterns                                         |
 | `evm-explorers`          | Default block explorer URL and name for every chain shipped by `sablier`       |
 | `btt`                    | Bulloak tree specifications for smart contract integration tests               |
