@@ -48,7 +48,6 @@ npx skills add sablier-labs/agent-skills -l
 | Skill                    | Description                                                                    |
 | ------------------------ | ------------------------------------------------------------------------------ |
 | `evm-deployment`         | EVM smart contract deployment patterns                                         |
-| `evm-explorers`          | Default block explorer URL and name for every chain shipped by `sablier`       |
 | `btt`                    | Bulloak tree specifications for smart contract integration tests               |
 | `cli-forge`              | Foundry tests, fuzz tests, fork tests, invariant tests, and deployment scripts |
 | `viem`                   | Viem TypeScript interface for Ethereum interactions                            |
