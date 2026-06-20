@@ -11,14 +11,14 @@ A collection of agent skills for AI coding assistants developed by Sablier Labs.
 # Add all skills from this repository
 npx skills add sablier-labs/agent-skills
 
-# Add a specific skill (e.g., evm-chains)
-npx skills add sablier-labs/agent-skills -s evm-chains
+# Add a specific skill (e.g., evm-atlas)
+npx skills add sablier-labs/agent-skills -s evm-atlas
 
 # Add globally for all projects
-npx skills add sablier-labs/agent-skills -s evm-chains -g
+npx skills add sablier-labs/agent-skills -s evm-atlas -g
 
 # Target a specific agent (claude-code, cursor, cline, codex, etc.)
-npx skills add sablier-labs/agent-skills -s evm-chains -a claude-code
+npx skills add sablier-labs/agent-skills -s evm-atlas -a claude-code
 
 # List available skills before installing
 npx skills add sablier-labs/agent-skills -l
@@ -28,29 +28,29 @@ npx skills add sablier-labs/agent-skills -l
 
 ### Sablier
 
-| Skill            | Description                                                                    |
-| ---------------- | ------------------------------------------------------------------------------ |
-| `sablier-design` | Sablier dark-theme aesthetic and production-grade React interfaces             |
-| `sablier-icon`   | Recolor the Sablier icon SVG to any brand or hex color, with PNG/JPG export    |
+| Skill             | Description                                                                    |
+| ----------------- | ------------------------------------------------------------------------------ |
+| `sablier-design`  | Sablier dark-theme aesthetic and production-grade React interfaces             |
+| `sablier-icon`    | Recolor the Sablier icon SVG to any brand or hex color, with PNG/JPG export    |
 | `sablier-writing` | Content creation with Sablier brand voice: blog posts, case studies, X/Twitter |
 
 ### Development
 
-| Skill                  | Description                                                       |
-| ---------------------- | ----------------------------------------------------------------- |
-| `spec-from-screenshot` | Analyze screenshots and generate implementation specs             |
-| `tailwind-css`         | Tailwind CSS v4 rules and tailwind-variants                       |
-| `vitest`               | Vitest v4 testing patterns for TypeScript React/Next.js           |
-| `xstate-react`         | XState v5 + React integration patterns                            |
+| Skill                  | Description                                             |
+| ---------------------- | ------------------------------------------------------- |
+| `spec-from-screenshot` | Analyze screenshots and generate implementation specs   |
+| `tailwind-css`         | Tailwind CSS v4 rules and tailwind-variants             |
+| `vitest`               | Vitest v4 testing patterns for TypeScript React/Next.js |
+| `xstate-react`         | XState v5 + React integration patterns                  |
 
 ### Web3
 
-| Skill                    | Description                                                                    |
-| ------------------------ | ------------------------------------------------------------------------------ |
-| `evm-deployment`         | EVM smart contract deployment patterns                                         |
-| `btt`                    | Bulloak tree specifications for smart contract integration tests               |
-| `cli-forge`              | Foundry tests, fuzz tests, fork tests, invariant tests, and deployment scripts |
-| `viem`                   | Viem TypeScript interface for Ethereum interactions                            |
+| Skill            | Description                                                                    |
+| ---------------- | ------------------------------------------------------------------------------ |
+| `evm-deployment` | EVM smart contract deployment patterns                                         |
+| `btt`            | Bulloak tree specifications for smart contract integration tests               |
+| `cli-forge`      | Foundry tests, fuzz tests, fork tests, invariant tests, and deployment scripts |
+| `viem`           | Viem TypeScript interface for Ethereum interactions                            |
 
 ## Usage
 
