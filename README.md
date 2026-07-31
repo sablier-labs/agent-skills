@@ -11,14 +11,14 @@ A collection of agent skills for AI coding assistants developed by Sablier Labs.
 # Add all skills from this repository
 npx skills add sablier-labs/agent-skills
 
-# Add a specific skill (e.g., evm-atlas)
-npx skills add sablier-labs/agent-skills -s evm-atlas
+# Add a specific skill (e.g., evm-deployment)
+npx skills add sablier-labs/agent-skills -s evm-deployment
 
 # Add globally for all projects
-npx skills add sablier-labs/agent-skills -s evm-atlas -g
+npx skills add sablier-labs/agent-skills -s evm-deployment -g
 
 # Target a specific agent (claude-code, cursor, cline, codex, etc.)
-npx skills add sablier-labs/agent-skills -s evm-atlas -a claude-code
+npx skills add sablier-labs/agent-skills -s evm-deployment -a claude-code
 
 # List available skills before installing
 npx skills add sablier-labs/agent-skills -l
@@ -40,7 +40,6 @@ npx skills add sablier-labs/agent-skills -l
 | ---------------------- | ------------------------------------------------------- |
 | `spec-from-screenshot` | Analyze screenshots and generate implementation specs   |
 | `tailwind-css`         | Tailwind CSS v4 rules and tailwind-variants             |
-| `vitest`               | Vitest v4 testing patterns for TypeScript React/Next.js |
 | `xstate-react`         | XState v5 + React integration patterns                  |
 
 ### Web3
